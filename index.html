@@ -5,8 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#eef0f5" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#050608" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Listening</title>
 <script>
   try {
@@ -19,107 +19,106 @@
 <style>
   :root {
     color-scheme: light;
-    --bg: #eef0f5;
+    --bg: #f2f2f7;
+    --bg-top: #f9f9fb;
     --text: rgba(0, 0, 0, 0.88);
     --sub: rgba(60, 60, 67, 0.62);
-    --faint: rgba(60, 60, 67, 0.38);
-    --glass: rgba(255, 255, 255, 0.52);
-    --glass-strong: rgba(255, 255, 255, 0.72);
-    --glass-player: rgba(255, 255, 255, 0.62);
-    --field: rgba(255, 255, 255, 0.58);
-    --hairline: rgba(0, 0, 0, 0.08);
-    --rim-1: rgba(255, 255, 255, 0.95);
-    --rim-2: rgba(255, 255, 255, 0.25);
-    --inner-hl: rgba(255, 255, 255, 0.75);
-    --shadow: 0 10px 40px rgba(31, 38, 80, 0.10), 0 1px 3px rgba(31, 38, 80, 0.06);
+    --faint: rgba(60, 60, 67, 0.36);
+    --glass: rgba(255, 255, 255, 0.74);
+    --glass-strong: rgba(255, 255, 255, 0.92);
+    --glass-player: rgba(250, 250, 252, 0.70);
+    --field: rgba(118, 118, 128, 0.07);
+    --hairline: rgba(0, 0, 0, 0.07);
+    --rim-1: rgba(255, 255, 255, 1);
+    --rim-2: rgba(255, 255, 255, 0.35);
+    --inner-hl: rgba(255, 255, 255, 0.9);
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-float: 0 18px 50px rgba(0, 0, 0, 0.14), 0 2px 6px rgba(0, 0, 0, 0.06);
     --accent: #007aff;
-    --accent-soft: rgba(0, 122, 255, 0.12);
+    --accent-soft: rgba(0, 122, 255, 0.11);
     --danger: #ff3b30;
-    --danger-soft: rgba(255, 59, 48, 0.12);
+    --danger-soft: rgba(255, 59, 48, 0.11);
     --seg-bg: rgba(118, 118, 128, 0.12);
     --thumb: #ffffff;
     --track: rgba(0, 0, 0, 0.10);
-    --blob-1: #9cc2ff;
-    --blob-2: #ffc2d6;
-    --blob-3: #b4ecd7;
-    --blob-4: #ffe2b0;
-    --blob-opacity: 0.7;
     --ease: cubic-bezier(0.3, 0.7, 0.2, 1);
   }
 
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --bg: #050608;
+    --bg: #000000;
+    --bg-top: #0c0c0e;
     --text: rgba(255, 255, 255, 0.92);
     --sub: rgba(235, 235, 245, 0.60);
-    --faint: rgba(235, 235, 245, 0.34);
-    --glass: rgba(30, 32, 40, 0.42);
-    --glass-strong: rgba(58, 60, 70, 0.55);
-    --glass-player: rgba(28, 30, 38, 0.62);
-    --field: rgba(0, 0, 0, 0.22);
-    --hairline: rgba(255, 255, 255, 0.09);
-    --rim-1: rgba(255, 255, 255, 0.32);
-    --rim-2: rgba(255, 255, 255, 0.06);
-    --inner-hl: rgba(255, 255, 255, 0.10);
-    --shadow: 0 12px 44px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.30);
+    --faint: rgba(235, 235, 245, 0.32);
+    --glass: rgba(28, 28, 30, 0.74);
+    --glass-strong: rgba(58, 58, 60, 0.72);
+    --glass-player: rgba(36, 36, 38, 0.64);
+    --field: rgba(118, 118, 128, 0.14);
+    --hairline: rgba(255, 255, 255, 0.08);
+    --rim-1: rgba(255, 255, 255, 0.22);
+    --rim-2: rgba(255, 255, 255, 0.04);
+    --inner-hl: rgba(255, 255, 255, 0.08);
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-float: 0 18px 50px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
     --accent: #0a84ff;
     --accent-soft: rgba(10, 132, 255, 0.20);
     --danger: #ff453a;
     --danger-soft: rgba(255, 69, 58, 0.16);
     --seg-bg: rgba(118, 118, 128, 0.24);
-    --thumb: rgba(99, 99, 102, 0.85);
+    --thumb: #636366;
     --track: rgba(255, 255, 255, 0.14);
-    --blob-1: #1b3f9c;
-    --blob-2: #5b1d55;
-    --blob-3: #0c4d47;
-    --blob-4: #4a3410;
-    --blob-opacity: 0.55;
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       color-scheme: dark;
-      --bg: #050608;
+      --bg: #000000;
+      --bg-top: #0c0c0e;
       --text: rgba(255, 255, 255, 0.92);
       --sub: rgba(235, 235, 245, 0.60);
-      --faint: rgba(235, 235, 245, 0.34);
-      --glass: rgba(30, 32, 40, 0.42);
-      --glass-strong: rgba(58, 60, 70, 0.55);
-      --glass-player: rgba(28, 30, 38, 0.62);
-      --field: rgba(0, 0, 0, 0.22);
-      --hairline: rgba(255, 255, 255, 0.09);
-      --rim-1: rgba(255, 255, 255, 0.32);
-      --rim-2: rgba(255, 255, 255, 0.06);
-      --inner-hl: rgba(255, 255, 255, 0.10);
-      --shadow: 0 12px 44px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.30);
+      --faint: rgba(235, 235, 245, 0.32);
+      --glass: rgba(28, 28, 30, 0.74);
+      --glass-strong: rgba(58, 58, 60, 0.72);
+      --glass-player: rgba(36, 36, 38, 0.64);
+      --field: rgba(118, 118, 128, 0.14);
+      --hairline: rgba(255, 255, 255, 0.08);
+      --rim-1: rgba(255, 255, 255, 0.22);
+      --rim-2: rgba(255, 255, 255, 0.04);
+      --inner-hl: rgba(255, 255, 255, 0.08);
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-float: 0 18px 50px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
       --accent: #0a84ff;
       --accent-soft: rgba(10, 132, 255, 0.20);
       --danger: #ff453a;
       --danger-soft: rgba(255, 69, 58, 0.16);
       --seg-bg: rgba(118, 118, 128, 0.24);
-      --thumb: rgba(99, 99, 102, 0.85);
+      --thumb: #636366;
       --track: rgba(255, 255, 255, 0.14);
-      --blob-1: #1b3f9c;
-      --blob-2: #5b1d55;
-      --blob-3: #0c4d47;
-      --blob-4: #4a3410;
-      --blob-opacity: 0.55;
     }
   }
 
   * { box-sizing: border-box; }
 
-  html, body { margin: 0; }
-
-  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  html, body { margin: 0; background: var(--bg); }
 
   body {
+    min-height: 100vh;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
     color: var(--text);
-    background: var(--bg);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     transition: background-color 0.4s var(--ease), color 0.4s var(--ease);
+  }
+
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg) 60%);
+    transition: background 0.4s var(--ease);
   }
 
   button {
@@ -129,7 +128,6 @@
     border: 0;
     padding: 0;
     cursor: pointer;
-    touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -140,42 +138,17 @@
     outline-offset: 2px;
   }
 
-  input, textarea, select { touch-action: manipulation; }
-
   svg { display: block; }
 
   .hidden { display: none !important; }
-
-  /* ---------- 背景 ---------- */
-  .ambient {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    overflow: hidden;
-    background: var(--bg);
-    transition: background-color 0.4s var(--ease);
-  }
-
-  .ambient i {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: var(--blob-opacity);
-    transition: background-color 0.6s var(--ease), opacity 0.6s var(--ease);
-  }
-
-  .ambient i:nth-child(1) { width: 48vmax; height: 48vmax; top: -14vmax; left: -12vmax; background: var(--blob-1); }
-  .ambient i:nth-child(2) { width: 40vmax; height: 40vmax; top: 18vh; right: -16vmax; background: var(--blob-2); }
-  .ambient i:nth-child(3) { width: 44vmax; height: 44vmax; bottom: -18vmax; left: 4vmax; background: var(--blob-3); }
-  .ambient i:nth-child(4) { width: 26vmax; height: 26vmax; bottom: 8vh; right: 10vmax; background: var(--blob-4); }
 
   /* ---------- ガラス ---------- */
   .glass {
     position: relative;
     background: var(--glass);
-    -webkit-backdrop-filter: blur(28px) saturate(180%);
-    backdrop-filter: blur(28px) saturate(180%);
-    border-radius: 28px;
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    backdrop-filter: blur(30px) saturate(180%);
+    border-radius: 26px;
     box-shadow: var(--shadow), inset 0 1px 0 var(--inner-hl);
   }
 
@@ -185,7 +158,7 @@
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(145deg, var(--rim-1), var(--rim-2) 28%, transparent 52%, var(--rim-2) 82%, var(--rim-1));
+    background: linear-gradient(150deg, var(--rim-1), var(--rim-2) 30%, transparent 55%, var(--rim-2) 85%, var(--rim-1));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
@@ -198,18 +171,18 @@
     margin: 0 auto;
     padding: calc(28px + env(safe-area-inset-top)) 16px calc(48px + env(safe-area-inset-bottom));
     display: grid;
-    gap: 28px;
+    gap: 30px;
+    transition: padding-bottom 0.4s var(--ease);
   }
 
   body.has-player main { padding-bottom: calc(320px + env(safe-area-inset-bottom)); }
 
-  .hero { padding: 12px 4px 0; }
-
-  .hero-row {
+  .hero {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+    padding: 12px 4px 0;
   }
 
   .hero h1 {
@@ -217,27 +190,6 @@
     font-size: 2.125rem;
     font-weight: 700;
     letter-spacing: -0.022em;
-  }
-
-  .purpose {
-    width: calc(100% + 8px);
-    margin: 4px 0 0 -8px;
-    padding: 6px 8px;
-    border: 0;
-    border-radius: 10px;
-    background: transparent;
-    color: var(--sub);
-    font-family: inherit;
-    font-size: 16px;
-    transition: background-color 0.2s, color 0.2s;
-  }
-
-  .purpose::placeholder { color: var(--faint); }
-
-  .purpose:focus {
-    outline: none;
-    background: var(--field);
-    color: var(--text);
   }
 
   .round-btn {
@@ -254,21 +206,6 @@
 
   .card { padding: 20px; }
 
-  .card-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-    margin: 0 4px 14px;
-  }
-
-  .card-head h2 {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: -0.015em;
-  }
-
   .link {
     color: var(--accent);
     font-size: 0.95rem;
@@ -282,6 +219,12 @@
     background: var(--danger-soft);
     color: var(--danger);
     font-size: 0.9rem;
+  }
+
+  .hint {
+    margin: -2px 4px 0;
+    font-size: 0.8rem;
+    color: var(--sub);
   }
 
   /* ---------- 入力 ---------- */
@@ -310,9 +253,9 @@
 
   textarea.field {
     display: block;
-    height: 184px;
+    min-height: 176px;
     padding-bottom: 56px;
-    resize: none;
+    resize: vertical;
     line-height: 1.6;
   }
 
@@ -340,6 +283,21 @@
     color: #fff;
   }
 
+  .mic.recording::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid var(--danger);
+    animation: ring 1.4s ease-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes ring {
+    from { opacity: 0.6; transform: scale(0.9); }
+    to { opacity: 0; transform: scale(1.5); }
+  }
+
   .countline {
     min-height: 1.3em;
     margin: -2px 4px 0;
@@ -362,12 +320,14 @@
   .select-wrap select {
     appearance: none;
     -webkit-appearance: none;
+    padding-right: 36px;
     height: 40px;
     padding-top: 0;
     padding-bottom: 0;
-    padding-right: 36px;
     cursor: pointer;
   }
+
+  .select-wrap select:disabled { cursor: default; color: var(--sub); }
 
   .select-wrap svg {
     position: absolute;
@@ -421,7 +381,7 @@
   /* ---------- 再生設定 ---------- */
   .settings {
     border-radius: 14px;
-    background: var(--seg-bg);
+    background: var(--field);
   }
 
   .settings summary {
@@ -577,9 +537,12 @@
   .actions {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     gap: 10px;
     margin-top: 6px;
   }
+
+  .actions .link { margin-right: auto; padding: 4px 6px; }
 
   .btn {
     height: 44px;
@@ -588,44 +551,52 @@
     border-radius: 999px;
     font-size: 0.95rem;
     font-weight: 600;
-    background: var(--glass-strong);
-    box-shadow: inset 0 1px 0 var(--inner-hl), 0 0 0 0.5px var(--hairline), 0 2px 6px rgba(0, 0, 0, 0.06);
+    background: var(--seg-bg);
     transition: background-color 0.2s, opacity 0.2s;
   }
 
   .btn.primary {
     background: var(--accent);
     color: #fff;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 18px color-mix(in srgb, var(--accent) 32%, transparent);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 6px 18px color-mix(in srgb, var(--accent) 28%, transparent);
   }
-
-  .status {
-    min-height: 1.2em;
-    margin: 0 4px;
-    font-size: 0.8rem;
-    color: var(--sub);
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .status.error { color: var(--danger); }
 
   /* ---------- ライブラリ ---------- */
-  .facts {
-    font-size: 0.82rem;
-    color: var(--sub);
-    font-variant-numeric: tabular-nums;
-    text-align: right;
-  }
-
   .search {
-    margin-bottom: 12px;
+    margin-bottom: 18px;
     height: 40px;
     padding-top: 0;
     padding-bottom: 0;
-    background: var(--glass);
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
+  }
+
+  .library {
+    display: grid;
+    gap: 24px;
+  }
+
+  .group-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 0 6px 8px;
+  }
+
+  .group-date {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .group-rel {
+    font-size: 0.82rem;
+    color: var(--sub);
+  }
+
+  .group-count {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--faint);
+    font-variant-numeric: tabular-nums;
   }
 
   .list { overflow: hidden; }
@@ -672,7 +643,15 @@
 
   .item-body { min-width: 0; }
 
+  .item-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
   .item-title {
+    min-width: 0;
     font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
@@ -680,17 +659,15 @@
   }
 
   .tag {
-    display: inline-block;
-    margin-left: 6px;
+    flex: none;
     padding: 0 6px;
     border-radius: 6px;
     background: var(--seg-bg);
     color: var(--sub);
     font-size: 0.66rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     line-height: 1.6;
-    vertical-align: 2px;
   }
 
   .item-snippet {
@@ -707,8 +684,6 @@
     color: var(--faint);
     font-variant-numeric: tabular-nums;
   }
-
-  .item-meta .busy { color: var(--accent); }
 
   .item-actions {
     display: flex;
@@ -748,17 +723,6 @@
     font-size: 0.92rem;
   }
 
-  .backup {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: 12px 4px 0;
-    font-size: 0.82rem;
-    color: var(--faint);
-  }
-
-  .backup .link { font-size: 0.82rem; }
-
   /* ---------- プレーヤー ---------- */
   .player {
     position: fixed;
@@ -770,6 +734,7 @@
     background: var(--glass-player);
     -webkit-backdrop-filter: blur(40px) saturate(200%);
     backdrop-filter: blur(40px) saturate(200%);
+    box-shadow: var(--shadow-float), inset 0 1px 0 var(--inner-hl);
     z-index: 10;
     opacity: 0;
     pointer-events: none;
@@ -819,13 +784,12 @@
     letter-spacing: -0.012em;
     user-select: none;
     -webkit-user-select: none;
-    -webkit-touch-callout: none;
     cursor: default;
   }
 
   .p-sentence .w {
     display: inline-block;
-    transition: filter 0.45s var(--ease), opacity 0.45s var(--ease), color 0.2s;
+    transition: filter 0.5s var(--ease), opacity 0.5s var(--ease), color 0.25s;
   }
 
   .p-sentence[data-mode="follow"] .w:not(.clear) {
@@ -895,6 +859,7 @@
   .p-transport .icon-btn svg { width: 24px; height: 24px; }
 
   .play-btn {
+    position: relative;
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -902,14 +867,24 @@
     place-items: center;
     background: var(--accent);
     color: #fff;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 8px 22px color-mix(in srgb, var(--accent) 38%, transparent);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 8px 22px color-mix(in srgb, var(--accent) 34%, transparent);
   }
 
   .play-btn svg { width: 26px; height: 26px; }
 
-  .play-btn.loading svg { animation: spin 0.9s linear infinite; }
+  .play-btn.pending::after {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: var(--accent);
+    animation: spin 0.9s linear infinite;
+  }
 
-  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
 
   .chip {
     height: 32px;
@@ -939,6 +914,7 @@
     padding: 10px 18px;
     border-radius: 999px;
     font-size: 0.9rem;
+    box-shadow: var(--shadow-float), inset 0 1px 0 var(--inner-hl);
     z-index: 20;
     opacity: 0;
     pointer-events: none;
@@ -972,28 +948,18 @@
 </head>
 <body>
 
-<div class="ambient" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="backdrop" aria-hidden="true"></div>
 
 <main>
   <header class="hero">
-    <div class="hero-row">
-      <h1>Listening</h1>
-      <button id="btnTheme" class="round-btn glass" type="button"></button>
-    </div>
-    <input id="purpose" class="purpose" type="text" maxlength="80" placeholder="このアプリを使う目的（任意）" aria-label="目的">
+    <h1>Listening</h1>
+    <button id="btnTheme" class="round-btn glass" type="button"></button>
   </header>
 
   <section class="glass card" id="composer">
-    <div class="card-head">
-      <h2 id="composerHeading">新しい英文</h2>
-      <button id="btnCancelEdit" class="link hidden" type="button">キャンセル</button>
-    </div>
-
-    <p id="unsupported" class="notice hidden">このブラウザでは音声を作成できません。Chrome、Edge、Safari の最新版で開いてください。</p>
+    <p id="unsupported" class="notice hidden">このブラウザは読み上げに対応していません。Chrome、Edge、Safari の最新版で開いてください。</p>
 
     <div class="stack">
-      <input id="title" class="field" type="text" placeholder="タイトル（任意）" aria-label="タイトル">
-
       <div class="textwrap" id="textwrap">
         <textarea id="text" class="field" placeholder="Type or dictate English here." aria-label="英文" spellcheck="true" lang="en"></textarea>
         <button id="btnMic" class="mic hidden" type="button" aria-label="音声入力" aria-pressed="false"></button>
@@ -1011,6 +977,7 @@
           <span id="selectChevron"></span>
         </div>
       </div>
+      <p id="voiceHint" class="hint hidden"></p>
 
       <details class="settings" id="settings">
         <summary>
@@ -1024,7 +991,7 @@
               <label for="rate">速さ</label>
               <output id="rateVal" for="rate"></output>
             </div>
-            <input type="range" id="rate" min="0.7" max="1.3" step="0.05">
+            <input type="range" id="rate" min="0.5" max="1.5" step="0.05">
           </div>
           <div>
             <div class="setting-head">
@@ -1051,27 +1018,16 @@
       </details>
 
       <div class="actions">
+        <button id="btnCancelEdit" class="link hidden" type="button">編集をやめる</button>
         <button id="btnPreview" class="btn" type="button">試聴</button>
         <button id="btnSave" class="btn primary" type="button">保存</button>
       </div>
-      <div id="engineStatus" class="status" aria-live="polite"></div>
     </div>
   </section>
 
-  <section>
-    <div class="card-head">
-      <h2>ライブラリ</h2>
-      <span id="libFacts" class="facts"></span>
-    </div>
+  <section aria-label="保存した英文">
     <input id="search" class="field search hidden" type="search" placeholder="検索" aria-label="検索">
-    <div id="list" class="glass list"></div>
-    <div class="backup">
-      <span>バックアップ</span>
-      <button id="btnExport" class="link" type="button">書き出す</button>
-      <span aria-hidden="true">·</span>
-      <button id="btnImport" class="link" type="button">読み込む</button>
-      <input type="file" id="importFile" accept="application/json,.json" class="hidden">
-    </div>
+    <div id="list" class="library"></div>
   </section>
 </main>
 
@@ -1102,109 +1058,15 @@
 
   const ITEMS_KEY = 'listeningMaker.items.v1';
   const PREFS_KEY = 'listeningMaker.prefs.v1';
-  const CLIP_VERSION = 'k1';
   const $ = (id) => document.getElementById(id);
+  const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
   const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition || null;
-  const SUPPORTED = typeof Worker !== 'undefined' && typeof WebAssembly === 'object' && 'indexedDB' in window;
 
-  // ---------- 声 ----------
-  const VOICES = {
-    US: [
-      { id: 'af_heart', name: 'Heart', g: '女性' },
-      { id: 'af_bella', name: 'Bella', g: '女性' },
-      { id: 'am_michael', name: 'Michael', g: '男性' },
-      { id: 'am_fenrir', name: 'Fenrir', g: '男性' }
-    ],
-    UK: [
-      { id: 'bf_emma', name: 'Emma', g: '女性' },
-      { id: 'bf_isabella', name: 'Isabella', g: '女性' },
-      { id: 'bm_george', name: 'George', g: '男性' },
-      { id: 'bm_fable', name: 'Fable', g: '男性' }
-    ]
-  };
-  const VOICE_INDEX = {};
-  Object.keys(VOICES).forEach((a) => VOICES[a].forEach((v) => { VOICE_INDEX[v.id] = { ...v, accent: a }; }));
-
-  // ---------- 音声生成ワーカー ----------
-  const WORKER_SRC = `
-    const SOURCES = [
-      'https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/dist/kokoro.web.js',
-      'https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm',
-      'https://esm.sh/kokoro-js@1.2.1'
-    ];
-    const MODEL = 'onnx-community/Kokoro-82M-v1.0-ONNX';
-    const files = {};
-    let ttsPromise = null;
-
-    function report(p) {
-      if (!p || !p.file) return;
-      if (p.status === 'progress') {
-        files[p.file] = { loaded: p.loaded || 0, total: p.total || 0 };
-      } else if (p.status === 'done' && files[p.file]) {
-        files[p.file].loaded = files[p.file].total;
-      } else {
-        return;
-      }
-      let loaded = 0;
-      let total = 0;
-      for (const k in files) {
-        loaded += files[k].loaded;
-        total += files[k].total;
-      }
-      self.postMessage({ type: 'progress', loaded, total });
-    }
-
-    async function loadModule() {
-      let lastError = null;
-      for (const src of SOURCES) {
-        try {
-          const m = await import(src);
-          if (m && m.KokoroTTS) return m.KokoroTTS;
-        } catch (e) {
-          lastError = e;
-        }
-      }
-      throw lastError || new Error('module not found');
-    }
-
-    function getTTS() {
-      if (!ttsPromise) {
-        ttsPromise = (async () => {
-          const KokoroTTS = await loadModule();
-          const tts = await KokoroTTS.from_pretrained(MODEL, {
-            dtype: 'q8',
-            device: 'wasm',
-            progress_callback: report
-          });
-          self.postMessage({ type: 'ready' });
-          return tts;
-        })();
-        ttsPromise.catch(() => { ttsPromise = null; });
-      }
-      return ttsPromise;
-    }
-
-    self.onmessage = async (e) => {
-      const msg = e.data;
-      try {
-        const tts = await getTTS();
-        if (msg.type === 'load') return;
-        const out = await tts.generate(msg.text, { voice: msg.voice });
-        const samples = out.audio instanceof Float32Array ? out.audio.slice() : new Float32Array(out.audio);
-        self.postMessage({ type: 'audio', id: msg.id, samples, rate: out.sampling_rate }, [samples.buffer]);
-      } catch (err) {
-        self.postMessage({ type: 'error', id: msg.id || 0, message: String((err && err.message) || err) });
-      }
-    };
-  `;
-
-  // ---------- アイコン ----------
   const STROKE = 'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
   const ICON = {
     play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>',
     pause: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1.2"/><rect x="13.5" y="5" width="4" height="14" rx="1.2"/></svg>',
     replay: `<svg viewBox="0 0 24 24" ${STROKE} stroke-width="2"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg>`,
-    spinner: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 4a8 8 0 1 0 8 8"/></svg>',
     prev: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="2.4" height="14" rx="1"/><path d="M19 6.2v11.6a.9.9 0 0 1-1.38.76L9.3 13.3a1.5 1.5 0 0 1 0-2.6l8.32-5.26A.9.9 0 0 1 19 6.2z"/></svg>',
     next: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="16.6" y="5" width="2.4" height="14" rx="1"/><path d="M5 6.2v11.6a.9.9 0 0 0 1.38.76l8.32-5.26a1.5 1.5 0 0 0 0-2.6L6.38 5.44A.9.9 0 0 0 5 6.2z"/></svg>',
     close: `<svg viewBox="0 0 24 24" ${STROKE} stroke-width="2"><path d="M7 7l10 10M17 7L7 17"/></svg>`,
@@ -1221,20 +1083,68 @@
   const THEME_LABEL = { system: '自動', light: 'ライト', dark: 'ダーク' };
   const MODES = ['follow', 'all', 'hide'];
   const MODE_LABEL = { follow: '声に合わせる', all: '常に表示', hide: '隠す' };
-  const RATES = [0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3];
+  const RATES = [0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3];
+  const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'];
   const ABBR = /\b(?:Mr|Mrs|Ms|Dr|Prof|Sr|Jr|St|vs|e\.g|i\.e)\.$/i;
+
+  // 効果音・合成風・子どもの声など、ふつうの人の声ではないもの
+  const EXCLUDED = /^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Deranged|Good News|Hysterical|Jester|Organ|Pipe Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Fred|Junior|Kathy|Ralph|Princess|Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley|Ana|Maisie)\b/i;
+
+  // 声の特徴（名前ではなく、性別と声の印象で表示する）
+  const TRAITS = {
+    aria: ['女性', 'はきはき'],
+    jenny: ['女性', 'やわらか'],
+    michelle: ['女性', '明るい'],
+    emma: ['女性', '明瞭'],
+    ava: ['女性', '落ち着いた'],
+    samantha: ['女性', '標準的'],
+    allison: ['女性', 'やわらか'],
+    susan: ['女性', '落ち着いた'],
+    zoe: ['女性', '明るい'],
+    nicky: ['女性', '若々しい'],
+    joelle: ['女性', 'やさしい'],
+    zira: ['女性', '標準的'],
+    sonia: ['女性', '上品'],
+    libby: ['女性', '明るい'],
+    kate: ['女性', '落ち着いた'],
+    serena: ['女性', '上品'],
+    stephanie: ['女性', 'やわらか'],
+    martha: ['女性', '上品'],
+    hazel: ['女性', '標準的'],
+    guy: ['男性', '力強い'],
+    christopher: ['男性', '低め'],
+    eric: ['男性', '淡々'],
+    roger: ['男性', '快活'],
+    steffan: ['男性', '淡々'],
+    andrew: ['男性', '温かい'],
+    brian: ['男性', '気さく'],
+    tom: ['男性', '標準的'],
+    alex: ['男性', '明瞭'],
+    aaron: ['男性', '落ち着いた'],
+    evan: ['男性', '若々しい'],
+    nathan: ['男性', '低め'],
+    david: ['男性', '標準的'],
+    mark: ['男性', '標準的'],
+    ryan: ['男性', '明るい'],
+    thomas: ['男性', '落ち着いた'],
+    daniel: ['男性', '標準的'],
+    arthur: ['男性', '低め'],
+    oliver: ['男性', 'やわらか'],
+    george: ['男性', '標準的'],
+    'google us english': ['女性', '明瞭'],
+    'google uk english female': ['女性', '明瞭'],
+    'google uk english male': ['男性', '明瞭']
+  };
 
   const DEFAULT_PREFS = {
     theme: 'system',
     accent: 'US',
-    voiceId: { US: 'af_heart', UK: 'bf_emma' },
+    voice: { US: '', UK: '' },
     rate: 1,
     pause: 1,
     repeat: 1,
     loop: false,
-    display: 'follow',
-    purpose: '',
-    modelReady: false
+    display: 'follow'
   };
 
   // ---------- 保存 ----------
@@ -1247,31 +1157,34 @@
     }
   }
 
-  function clampNum(v, min, max, fallback) {
-    const n = Number(v);
-    if (!Number.isFinite(n)) return fallback;
-    return Math.min(max, Math.max(min, n));
-  }
-
-  function validVoice(id, accent) {
-    return VOICE_INDEX[id] && VOICE_INDEX[id].accent === accent ? id : DEFAULT_PREFS.voiceId[accent];
-  }
-
   function loadPrefs() {
     const p = loadJSON(PREFS_KEY, {});
-    const merged = { ...DEFAULT_PREFS, ...p };
-    const v = p.voiceId || {};
-    merged.voiceId = { US: validVoice(v.US, 'US'), UK: validVoice(v.UK, 'UK') };
-    merged.accent = merged.accent === 'UK' ? 'UK' : 'US';
-    merged.rate = clampNum(merged.rate, 0.7, 1.3, 1);
-    delete merged.voice;
-    return merged;
+    return {
+      ...DEFAULT_PREFS,
+      ...p,
+      voice: { ...DEFAULT_PREFS.voice, ...(p.voice || {}) }
+    };
   }
 
   function savePrefs() {
     try {
-      localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
+      localStorage.setItem(PREFS_KEY, JSON.stringify({
+        theme: prefs.theme,
+        accent: prefs.accent,
+        voice: prefs.voice,
+        rate: prefs.rate,
+        pause: prefs.pause,
+        repeat: prefs.repeat,
+        loop: prefs.loop,
+        display: prefs.display
+      }));
     } catch (e) {}
+  }
+
+  function clampNum(v, min, max, fallback) {
+    const n = Number(v);
+    if (!Number.isFinite(n)) return fallback;
+    return Math.min(max, Math.max(min, n));
   }
 
   function normalizeItem(i) {
@@ -1280,15 +1193,14 @@
       ? s.accent
       : (/(en-GB|\bUK\b|British|United Kingdom)/i.test(s.voiceName || '') ? 'UK' : 'US');
     const created = Number(i.createdAt) || Date.now();
-    const text = String(i.text);
     return {
       id: String(i.id),
-      title: String(i.title || '').trim() || autoTitle(text),
-      text,
+      text: String(i.text),
       settings: {
         accent,
-        voice: validVoice(s.voice, accent),
-        rate: clampNum(s.rate, 0.7, 1.3, 1),
+        voiceURI: s.voiceURI || '',
+        voiceName: s.voiceName || '',
+        rate: clampNum(s.rate, 0.5, 1.5, 1),
         pause: clampNum(s.pause, 0, 5, 1),
         repeat: [1, 2, 3, 5].includes(Number(s.repeat)) ? Number(s.repeat) : 1,
         loop: !!s.loop
@@ -1319,49 +1231,18 @@
     }
   }
 
-  // ---------- IndexedDB（音声の保存） ----------
-  const idb = (() => {
-    let dbp = null;
-    function open() {
-      if (!dbp) {
-        dbp = new Promise((resolve, reject) => {
-          const r = indexedDB.open('listeningMaker', 1);
-          r.onupgradeneeded = () => r.result.createObjectStore('clips');
-          r.onsuccess = () => resolve(r.result);
-          r.onerror = () => reject(r.error);
-        });
-      }
-      return dbp;
-    }
-    async function run(mode, fn) {
-      const db = await open();
-      return new Promise((resolve, reject) => {
-        const t = db.transaction('clips', mode);
-        const req = fn(t.objectStore('clips'));
-        t.oncomplete = () => resolve(req ? req.result : undefined);
-        t.onerror = () => reject(t.error);
-        t.onabort = () => reject(t.error);
-      });
-    }
-    return {
-      get: (k) => run('readonly', (s) => s.get(k)),
-      put: (k, v) => run('readwrite', (s) => s.put(v, k)),
-      del: (k) => run('readwrite', (s) => s.delete(k)),
-      keys: () => run('readonly', (s) => s.getAllKeys())
-    };
-  })();
-
   const prefs = loadPrefs();
   let items = loadItems();
   let editingId = null;
   let formAccent = prefs.accent;
   let formRepeat = prefs.repeat;
-  let formVoice = { ...prefs.voiceId };
+  let formVoice = { ...prefs.voice };
+  let voicesByAccent = { US: [], UK: [] };
+  let bestTier = { US: 0, UK: 0 };
+  const failedVoices = new Set();
   let lastDeleted = null;
   let accentSeg = null;
   let repeatSeg = null;
-  const readySet = new Set();
-  const memCache = new Map();
 
   // ---------- ユーティリティ ----------
   function escapeHtml(str) {
@@ -1378,11 +1259,6 @@
     return s.length > n ? s.slice(0, n) + '…' : s;
   }
 
-  function autoTitle(text) {
-    const first = splitSentences(text)[0] || text.trim();
-    return truncate(first, 40);
-  }
-
   function fmtRate(r) {
     return Number(r).toFixed(2).replace(/0$/, '');
   }
@@ -1391,32 +1267,19 @@
     const cleaned = String(text).replace(/\s+/g, ' ').trim();
     if (!cleaned) return [];
     const parts = cleaned.split(/(?<=[.!?]["'”’)\]]*)\s+/);
-    const merged = [];
-    parts.forEach((p) => {
-      if (merged.length && ABBR.test(merged[merged.length - 1])) {
-        merged[merged.length - 1] += ' ' + p;
-      } else {
-        merged.push(p);
-      }
-    });
     const out = [];
-    merged.filter(Boolean).forEach((s) => {
-      if (s.length <= 300) {
-        out.push(s);
-        return;
+    parts.forEach((p) => {
+      if (out.length && ABBR.test(out[out.length - 1])) {
+        out[out.length - 1] += ' ' + p;
+      } else {
+        out.push(p);
       }
-      let buf = '';
-      s.split(/(?<=[,;:])\s+/).forEach((part) => {
-        if (buf && (buf + ' ' + part).length > 300) {
-          out.push(buf);
-          buf = part;
-        } else {
-          buf = buf ? buf + ' ' + part : part;
-        }
-      });
-      if (buf) out.push(buf);
     });
-    return out;
+    return out.filter(Boolean);
+  }
+
+  function firstSentence(text) {
+    return splitSentences(text)[0] || String(text).trim();
   }
 
   function countWords(text) {
@@ -1429,22 +1292,39 @@
     return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
   }
 
-  function dateLabel(ts) {
+  function daysAgo(ts) {
+    return Math.round((startOfDay(Date.now()) - startOfDay(ts)) / 86400000);
+  }
+
+  function shortDate(ts) {
     const d = new Date(ts);
     const md = `${d.getMonth() + 1}/${d.getDate()}`;
     return d.getFullYear() === new Date().getFullYear() ? md : `${d.getFullYear()}/${md}`;
   }
 
   function relLabel(ts) {
-    const diff = Math.round((startOfDay(Date.now()) - startOfDay(ts)) / 86400000);
+    const diff = daysAgo(ts);
     if (diff <= 0) return '今日';
     if (diff === 1) return '昨日';
     if (diff < 7) return `${diff}日前`;
-    return dateLabel(ts);
+    return shortDate(ts);
   }
 
-  function langOf(accent) {
-    return accent === 'UK' ? 'en-GB' : 'en-US';
+  function dayHeading(ts) {
+    const d = new Date(ts);
+    const md = `${d.getMonth() + 1}月${d.getDate()}日（${WEEKDAYS[d.getDay()]}）`;
+    const date = d.getFullYear() === new Date().getFullYear() ? md : `${d.getFullYear()}年${md}`;
+    const diff = daysAgo(ts);
+    let rel = '';
+    if (diff === 0) rel = '今日';
+    else if (diff === 1) rel = '昨日';
+    else if (diff > 1 && diff < 7) rel = `${diff}日前`;
+    return { date, rel };
+  }
+
+  function timeLabel(ts) {
+    const d = new Date(ts);
+    return `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`;
   }
 
   let toastTimer = null;
@@ -1470,253 +1350,14 @@
     toastTimer = setTimeout(() => t.classList.remove('show'), duration || 2400);
   }
 
-  // ---------- WAV ----------
-  function writeWav(seg, rate, gain) {
-    const n = seg.length;
-    const buf = new ArrayBuffer(44 + n * 2);
-    const v = new DataView(buf);
-    const str = (o, s) => {
-      for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i));
-    };
-    str(0, 'RIFF');
-    v.setUint32(4, 36 + n * 2, true);
-    str(8, 'WAVE');
-    str(12, 'fmt ');
-    v.setUint32(16, 16, true);
-    v.setUint16(20, 1, true);
-    v.setUint16(22, 1, true);
-    v.setUint32(24, rate, true);
-    v.setUint32(28, rate * 2, true);
-    v.setUint16(32, 2, true);
-    v.setUint16(34, 16, true);
-    str(36, 'data');
-    v.setUint32(40, n * 2, true);
-    const fade = Math.min(Math.floor(rate * 0.006), Math.floor(n / 2));
-    for (let i = 0; i < n; i++) {
-      let x = seg[i] * gain;
-      if (fade > 0 && i < fade) x *= i / fade;
-      else if (fade > 0 && i >= n - fade) x *= (n - 1 - i) / fade;
-      x = Math.max(-1, Math.min(1, x));
-      v.setInt16(44 + i * 2, x < 0 ? x * 0x8000 : x * 0x7fff, true);
-    }
-    return buf;
-  }
-
-  function encodeClip(samples, rate) {
-    const th = 0.008;
-    let s = 0;
-    let e = samples.length - 1;
-    while (s < e && Math.abs(samples[s]) < th) s++;
-    while (e > s && Math.abs(samples[e]) < th) e--;
-    s = Math.max(0, s - Math.floor(rate * 0.04));
-    e = Math.min(samples.length - 1, e + Math.floor(rate * 0.08));
-    const seg = samples.subarray(s, e + 1);
-    let peak = 0;
-    for (let i = 0; i < seg.length; i++) {
-      const a = Math.abs(seg[i]);
-      if (a > peak) peak = a;
-    }
-    const gain = peak > 0.001 ? Math.min(2.5, 0.9 / peak) : 1;
-    return writeWav(seg, rate, gain);
-  }
-
-  // ---------- 音声エンジン ----------
-  const engine = {
-    worker: null,
-    state: 'idle',
-    loaded: 0,
-    total: 0,
-    queue: [],
-    current: null,
-    jobs: new Map(),
-    seq: 0
-  };
-
-  function clipKey(voice, sentence) {
-    return `${CLIP_VERSION}|${voice}|${sentence}`;
-  }
-
-  function memSet(key, blob) {
-    memCache.delete(key);
-    memCache.set(key, blob);
-    if (memCache.size > 200) memCache.delete(memCache.keys().next().value);
-  }
-
-  function startEngine() {
-    if (engine.worker) return true;
-    if (!SUPPORTED) return false;
-    try {
-      const url = URL.createObjectURL(new Blob([WORKER_SRC], { type: 'text/javascript' }));
-      engine.worker = new Worker(url, { type: 'module' });
-    } catch (e) {
-      engine.worker = null;
-      engineFailed(String(e));
-      return false;
-    }
-    engine.state = 'loading';
-    engine.loaded = 0;
-    engine.total = 0;
-    engine.worker.onmessage = onWorkerMessage;
-    engine.worker.onerror = (e) => engineFailed(e.message || 'worker error');
-    engine.worker.postMessage({ type: 'load' });
-    renderEngineStatus();
-    return true;
-  }
-
-  function engineFailed(message) {
-    const jobs = [engine.current, ...engine.queue].filter(Boolean);
-    engine.current = null;
-    engine.queue = [];
-    engine.jobs.clear();
-    if (engine.worker) {
-      engine.worker.terminate();
-      engine.worker = null;
-    }
-    engine.state = 'error';
-    renderEngineStatus();
-    jobs.forEach((j) => j.waiters.forEach((w) => w.rej(new Error('engine'))));
-    scheduleRenderList();
-    console.warn('Listening engine:', message);
-  }
-
-  function pump() {
-    if (!engine.worker || engine.current || !engine.queue.length) return;
-    const job = engine.queue.shift();
-    engine.current = job;
-    job.id = ++engine.seq;
-    engine.worker.postMessage({ type: 'generate', id: job.id, text: job.text, voice: job.voice });
-  }
-
-  function onWorkerMessage(e) {
-    const m = e.data;
-    if (m.type === 'progress') {
-      engine.loaded = m.loaded;
-      engine.total = m.total;
-      renderEngineStatus();
-      if (player.state === 'loading') updatePlayerUI();
-      return;
-    }
-    if (m.type === 'ready') {
-      engine.state = 'ready';
-      if (!prefs.modelReady) {
-        prefs.modelReady = true;
-        savePrefs();
-      }
-      renderEngineStatus();
-      if (player.state === 'loading') updatePlayerUI();
-      return;
-    }
-    if (m.type === 'error' && engine.state !== 'ready') {
-      engineFailed(m.message);
-      return;
-    }
-    const job = engine.current;
-    if (!job || job.id !== m.id) return;
-    engine.current = null;
-    engine.jobs.delete(job.key);
-
-    if (m.type === 'audio') {
-      const buf = encodeClip(m.samples, m.rate);
-      const blob = new Blob([buf], { type: 'audio/wav' });
-      memSet(job.key, blob);
-      readySet.add(job.key);
-      idb.put(job.key, buf).catch(() => {
-        readySet.delete(job.key);
-        toast('音声を保存できませんでした。ブラウザの保存容量を確認してください', null, 3600);
-      });
-      job.waiters.forEach((w) => w.res(blob));
-    } else {
-      job.waiters.forEach((w) => w.rej(new Error(m.message)));
-    }
-    scheduleRenderList();
-    pump();
-  }
-
-  function enqueue(key, voice, text, urgent) {
-    let job = engine.jobs.get(key);
-    if (!job) {
-      job = { key, voice, text, waiters: [] };
-      engine.jobs.set(key, job);
-      engine.queue.push(job);
-    }
-    if (urgent && engine.current !== job) {
-      const i = engine.queue.indexOf(job);
-      if (i > 0) {
-        engine.queue.splice(i, 1);
-        engine.queue.unshift(job);
-      }
-    }
-    const p = new Promise((res, rej) => job.waiters.push({ res, rej }));
-    if (!startEngine()) {
-      engine.jobs.delete(key);
-      engine.queue = engine.queue.filter((j) => j !== job);
-      job.waiters.forEach((w) => w.rej(new Error('unsupported')));
-    }
-    pump();
-    return p;
-  }
-
-  async function getClip(voice, text, urgent) {
-    const key = clipKey(voice, text);
-    if (memCache.has(key)) return memCache.get(key);
-    if (readySet.has(key)) {
-      try {
-        const buf = await idb.get(key);
-        if (buf) {
-          const blob = new Blob([buf], { type: 'audio/wav' });
-          memSet(key, blob);
-          return blob;
-        }
-      } catch (e) {}
-      readySet.delete(key);
-    }
-    return enqueue(key, voice, text, urgent);
-  }
-
-  function queueItem(item) {
-    splitSentences(item.text).forEach((s) => {
-      if (readySet.has(clipKey(item.settings.voice, s))) return;
-      getClip(item.settings.voice, s, false).catch(() => {});
-    });
-    scheduleRenderList();
-  }
-
-  function itemProgress(item) {
-    const ss = splitSentences(item.text);
-    const keys = ss.map((s) => clipKey(item.settings.voice, s));
-    return {
-      ready: keys.filter((k) => readySet.has(k)).length,
-      total: ss.length,
-      busy: keys.some((k) => engine.jobs.has(k))
-    };
-  }
-
-  function engineLoadingLabel() {
-    const pct = engine.total > 0 ? Math.min(99, Math.floor((engine.loaded / engine.total) * 100)) : null;
-    return pct === null ? '音声モデルを準備中…' : `音声モデルを準備中 ${pct}%`;
-  }
-
-  function renderEngineStatus() {
-    const el = $('engineStatus');
-    el.classList.toggle('error', engine.state === 'error');
-    if (!SUPPORTED) {
-      el.textContent = '';
-    } else if (engine.state === 'loading') {
-      el.textContent = engineLoadingLabel();
-    } else if (engine.state === 'error') {
-      el.textContent = '音声モデルを読み込めませんでした。通信状態を確認して、もう一度お試しください';
-    } else if (!prefs.modelReady) {
-      el.textContent = '初回のみ音声モデル（約90MB）を読み込みます';
-    } else {
-      el.textContent = '';
-    }
-  }
-
   // ---------- テーマ ----------
   function applyTheme() {
     const root = document.documentElement;
-    if (prefs.theme === 'system') root.removeAttribute('data-theme');
-    else root.setAttribute('data-theme', prefs.theme);
+    if (prefs.theme === 'system') {
+      root.removeAttribute('data-theme');
+    } else {
+      root.setAttribute('data-theme', prefs.theme);
+    }
     const b = $('btnTheme');
     const icon = prefs.theme === 'system' ? 'auto' : prefs.theme === 'light' ? 'sun' : 'moon';
     b.innerHTML = ICON[icon];
@@ -1746,18 +1387,202 @@
     return { set: (v) => set(v, false) };
   }
 
-  // ---------- フォーム ----------
-  function renderVoiceSelect() {
-    const sel = $('voice');
-    sel.innerHTML = '';
-    VOICES[formAccent].forEach((v) => sel.add(new Option(`${v.name} · ${v.g}`, v.id)));
-    sel.value = validVoice(formVoice[formAccent], formAccent);
+  // ---------- 声の選別 ----------
+  function accentOf(v) {
+    const l = (v.lang || '').replace('_', '-').toLowerCase();
+    if (l.startsWith('en-us')) return 'US';
+    if (l.startsWith('en-gb')) return 'UK';
+    return null;
   }
 
+  function baseName(v) {
+    return v.name
+      .replace(/^Microsoft\s+/i, '')
+      .replace(/\s+Online\b.*$/i, '')
+      .replace(/\s*-\s*English.*$/i, '')
+      .replace(/\s*\((Enhanced|Premium|Natural)\)/gi, '')
+      .replace(/\s*\(English.*\)\s*$/i, '')
+      .replace(/\s+Desktop$/i, '')
+      .replace(/Multilingual$/i, '')
+      .trim();
+  }
+
+  // 0: 除外 / 1: 旧式（他に無いときだけ表示）/ 2: 標準 / 3: 高音質
+  function voiceTier(v) {
+    const base = baseName(v);
+    const id = `${v.name} ${v.voiceURI || ''}`;
+    if (EXCLUDED.test(base) || /eloquence/i.test(id)) return 0;
+    if (/natural|neural|premium|enhanced|siri/i.test(id)) return 3;
+    if (/^Microsoft/i.test(v.name)) return /online/i.test(v.name) ? 3 : 1;
+    return 2;
+  }
+
+  function qualityScore(v) {
+    const id = `${v.name} ${v.voiceURI || ''}`;
+    if (/premium|natural|neural/i.test(id)) return 3;
+    if (/enhanced|siri/i.test(id)) return 2;
+    if (/^Google/i.test(v.name)) return 1;
+    return 0;
+  }
+
+  function traitOf(base) {
+    const t = TRAITS[base.toLowerCase()];
+    if (t) return { gender: t[0], label: `${t[0]} · ${t[1]}` };
+    if (/female/i.test(base)) return { gender: '女性', label: '女性' };
+    if (/male/i.test(base)) return { gender: '男性', label: '男性' };
+    return { gender: '', label: '標準の声' };
+  }
+
+  function genderOrder(g) {
+    return g === '女性' ? 0 : g === '男性' ? 1 : 2;
+  }
+
+  function loadVoices() {
+    if (!synth) return;
+    const groups = { US: [], UK: [] };
+    synth.getVoices().forEach((v) => {
+      const accent = accentOf(v);
+      if (!accent || failedVoices.has(v.voiceURI)) return;
+      const tier = voiceTier(v);
+      if (!tier) return;
+      groups[accent].push({ v, tier, score: qualityScore(v), base: baseName(v) });
+    });
+
+    const next = { US: [], UK: [] };
+    const tiers = { US: 0, UK: 0 };
+
+    Object.keys(groups).forEach((k) => {
+      const all = groups[k];
+      const good = all.filter((e) => e.tier >= 2);
+      // 端末内の声はすぐに話し始めるため、品質が足りていれば端末内の声だけを使う
+      const localGood = good.filter((e) => e.v.localService);
+      const pool = localGood.length ? localGood : (good.length ? good : all);
+
+      const byBase = new Map();
+      pool.forEach((e) => {
+        const key = e.base.toLowerCase();
+        const cur = byBase.get(key);
+        if (!cur || e.tier * 10 + e.score > cur.tier * 10 + cur.score) byBase.set(key, e);
+      });
+
+      const list = [...byBase.values()].map((e) => ({ ...e, ...traitOf(e.base) }));
+      list.sort((a, b) =>
+        b.tier - a.tier
+        || genderOrder(a.gender) - genderOrder(b.gender)
+        || b.score - a.score
+        || a.label.localeCompare(b.label, 'ja'));
+
+      const count = {};
+      list.forEach((e) => { count[e.label] = (count[e.label] || 0) + 1; });
+      const seq = {};
+      list.forEach((e) => {
+        const l = e.label;
+        if (count[l] > 1) {
+          seq[l] = (seq[l] || 0) + 1;
+          e.label = `${l} ${seq[l]}`;
+        }
+      });
+
+      next[k] = list;
+      tiers[k] = list.length ? Math.max(...list.map((e) => e.tier)) : 0;
+    });
+
+    voicesByAccent = next;
+    bestTier = tiers;
+    renderVoiceSelect();
+    if (player.state !== 'idle') updatePlayerTitle();
+  }
+
+  function voicesReady() {
+    return voicesByAccent.US.length > 0 || voicesByAccent.UK.length > 0;
+  }
+
+  function waitVoices() {
+    if (!synth || voicesReady()) return Promise.resolve();
+    if (synth.getVoices().length) {
+      loadVoices();
+      return Promise.resolve();
+    }
+    return new Promise((resolve) => {
+      let finished = false;
+      const done = () => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timer);
+        synth.removeEventListener('voiceschanged', done);
+        loadVoices();
+        resolve();
+      };
+      const timer = setTimeout(done, 800);
+      synth.addEventListener('voiceschanged', done);
+    });
+  }
+
+  function qualityHint() {
+    const ua = navigator.userAgent;
+    if (/iPhone|iPad|iPod/.test(ua)) {
+      return '高音質の声は「設定 → アクセシビリティ → 読み上げコンテンツ → 声 → 英語」で追加できます。追加後にページを再読み込みしてください。';
+    }
+    if (/Macintosh/.test(ua)) {
+      return '高音質の声は「システム設定 → アクセシビリティ → 読み上げコンテンツ → システムの声 → 声を管理」で追加できます。';
+    }
+    if (/Windows/.test(ua)) {
+      return 'Microsoft Edge で開くと、高音質の声を使えます。';
+    }
+    return 'Chrome または Edge で開くと、高音質の声を使えます。';
+  }
+
+  function renderVoiceSelect() {
+    const sel = $('voice');
+    const list = voicesByAccent[formAccent];
+    const want = formVoice[formAccent];
+    sel.innerHTML = '';
+    if (!list.length) {
+      sel.add(new Option('標準の声', ''));
+      sel.disabled = true;
+    } else {
+      sel.disabled = false;
+      list.forEach((e) => sel.add(new Option(e.label, e.v.voiceURI)));
+      sel.value = list.some((e) => e.v.voiceURI === want) ? want : list[0].v.voiceURI;
+    }
+    const hint = $('voiceHint');
+    const low = synth && synth.getVoices().length && bestTier[formAccent] < 2;
+    hint.textContent = low ? qualityHint() : '';
+    hint.classList.toggle('hidden', !low);
+  }
+
+  function findVoice(settings) {
+    const list = voicesByAccent[settings.accent] || [];
+    return list.find((e) => e.v.voiceURI === settings.voiceURI)
+      || list.find((e) => e.v.name === settings.voiceName)
+      || list[0]
+      || null;
+  }
+
+  function langOf(accent) {
+    return accent === 'UK' ? 'en-GB' : 'en-US';
+  }
+
+  // 声の読み込みを先に済ませておき、再生ボタンを押した瞬間に話し始められるようにする
+  function warmUp(entry) {
+    if (!synth || synth.speaking || synth.pending) return;
+    const u = new SpeechSynthesisUtterance(' ');
+    u.volume = 0;
+    if (entry) {
+      u.voice = entry.v;
+      u.lang = (entry.v.lang || '').replace('_', '-');
+    }
+    synth.speak(u);
+  }
+
+  // ---------- フォーム ----------
   function getFormSettings() {
+    const sel = $('voice');
+    const e = voicesByAccent[formAccent].find((x) => x.v.voiceURI === sel.value);
     return {
       accent: formAccent,
-      voice: validVoice($('voice').value, formAccent),
+      voiceURI: e ? e.v.voiceURI : '',
+      voiceName: e ? e.v.name : '',
       rate: Number($('rate').value),
       pause: Number($('pause').value),
       repeat: Number(formRepeat),
@@ -1798,8 +1623,8 @@
     if (!dictation.active) {
       $('countline').textContent = empty ? '' : `${splitSentences(text).length}文 · ${countWords(text)}語`;
     }
-    $('btnSave').disabled = empty || !SUPPORTED;
-    $('btnPreview').disabled = empty || !SUPPORTED;
+    $('btnSave').disabled = empty;
+    $('btnPreview').disabled = empty || !synth;
   }
 
   function onFormChange() {
@@ -1811,7 +1636,7 @@
     prefs.pause = s.pause;
     prefs.repeat = s.repeat;
     prefs.loop = s.loop;
-    prefs.voiceId = { US: validVoice(formVoice.US, 'US'), UK: validVoice(formVoice.UK, 'UK') };
+    prefs.voice = { ...prefs.voice, ...formVoice };
     savePrefs();
   }
 
@@ -1827,12 +1652,10 @@
 
   function resetForm() {
     editingId = null;
-    $('title').value = '';
     $('text').value = '';
-    $('composerHeading').textContent = '新しい英文';
     $('btnSave').textContent = '保存';
     $('btnCancelEdit').classList.add('hidden');
-    formVoice = { ...prefs.voiceId };
+    formVoice = { ...prefs.voice };
     applyFormSettings(settingsFromPrefs());
     renderList();
   }
@@ -1840,11 +1663,9 @@
   function startEdit(item) {
     stopDictation();
     editingId = item.id;
-    $('title').value = item.title;
     $('text').value = item.text;
-    formVoice = { ...prefs.voiceId, [item.settings.accent]: item.settings.voice };
+    formVoice = { ...prefs.voice, [item.settings.accent]: item.settings.voiceURI };
     applyFormSettings(item.settings);
-    $('composerHeading').textContent = '編集中';
     $('btnSave').textContent = '更新';
     $('btnCancelEdit').classList.remove('hidden');
     renderList();
@@ -1855,22 +1676,18 @@
     const text = $('text').value.trim();
     if (!text) return;
     stopDictation();
-    const title = $('title').value.trim() || autoTitle(text);
     const settings = getFormSettings();
     const now = Date.now();
-    let target = null;
 
     if (editingId) {
-      target = items.find((i) => i.id === editingId);
-      if (target) Object.assign(target, { title, text, settings, updatedAt: now });
+      const it = items.find((i) => i.id === editingId);
+      if (it) Object.assign(it, { text, settings, updatedAt: now });
       if (saveItems()) toast('更新しました');
     } else {
-      target = normalizeItem({ id: uid(), title, text, settings, createdAt: now, updatedAt: now });
-      items.push(target);
+      items.push(normalizeItem({ id: uid(), text, settings, createdAt: now, updatedAt: now }));
       if (saveItems()) toast('保存しました');
     }
     resetForm();
-    if (target) queueItem(target);
   }
 
   // ---------- 音声入力 ----------
@@ -1897,6 +1714,10 @@
     const sepB = before && mid && !/\s$/.test(before) ? ' ' : '';
     const sepA = after && mid && !/^\s/.test(after) ? ' ' : '';
     ta.value = before + sepB + mid + sepA + after;
+    const caret = (before + sepB + mid).length;
+    try {
+      ta.setSelectionRange(caret, caret);
+    } catch (e) {}
     updateLabels();
   }
 
@@ -1909,13 +1730,16 @@
     $('textwrap').classList.toggle('recording', on);
     const cl = $('countline');
     cl.classList.toggle('recording', on);
-    if (on) cl.textContent = `聞き取り中（${formAccent}）`;
-    else updateLabels();
+    if (on) {
+      cl.textContent = `聞き取り中（${formAccent}）`;
+    } else {
+      updateLabels();
+    }
   }
 
   function startDictation() {
     if (!Recognition) return;
-    if (player.state === 'playing' || player.state === 'loading') togglePlay();
+    if (player.state === 'playing') togglePlay();
 
     const ta = $('text');
     const start = ta.selectionStart ?? ta.value.length;
@@ -1934,8 +1758,11 @@
       let interim = '';
       for (let i = e.resultIndex; i < e.results.length; i++) {
         const r = e.results[i];
-        if (r.isFinal) dictation.final = joinText(dictation.final, formatSegment(r[0].transcript));
-        else interim += r[0].transcript;
+        if (r.isFinal) {
+          dictation.final = joinText(dictation.final, formatSegment(r[0].transcript));
+        } else {
+          interim += r[0].transcript;
+        }
       }
       writeDictation(interim.trim());
     };
@@ -1973,29 +1800,8 @@
   }
 
   // ---------- ライブラリ ----------
-  let listTimer = null;
-  function scheduleRenderList() {
-    clearTimeout(listTimer);
-    listTimer = setTimeout(renderList, 120);
-  }
-
-  function renderFacts() {
-    if (!items.length) {
-      $('libFacts').textContent = '';
-      return;
-    }
-    const plays = items.reduce((n, i) => n + (i.playCount || 0), 0);
-    const first = Math.min(...items.map((i) => i.createdAt));
-    $('libFacts').textContent = `${items.length}件 · 再生${plays}回 · ${dateLabel(first)}から`;
-  }
-
   function itemMeta(i) {
-    const prog = itemProgress(i);
-    if (prog.ready < prog.total) {
-      if (prog.busy) return `<span class="busy">音声を作成中 ${prog.ready}/${prog.total}</span>`;
-      return `音声は再生時に作成 · ${dateLabel(i.createdAt)} 作成`;
-    }
-    const parts = [`${dateLabel(i.createdAt)} 作成`];
+    const parts = [`${timeLabel(i.createdAt)} 保存`];
     parts.push(i.playCount ? `${i.playCount}回再生` : '未再生');
     if (i.lastPlayedAt) parts.push(`最終 ${relLabel(i.lastPlayedAt)}`);
     if (i.playLog.length >= 2) {
@@ -2006,43 +1812,66 @@
     return parts.join(' · ');
   }
 
+  function itemHtml(i) {
+    const isCurrent = player.itemId === i.id && player.state !== 'idle';
+    const isPlaying = isCurrent && player.state === 'playing';
+    const sents = splitSentences(i.text);
+    const head = sents[0] || i.text;
+    const rest = sents.slice(1).join(' ');
+    return `
+      <div class="item ${isCurrent ? 'playing' : ''} ${editingId === i.id ? 'editing' : ''}">
+        <button class="item-play" type="button" data-action="play" data-id="${i.id}" aria-label="${isPlaying ? '一時停止' : '再生'}">
+          ${isPlaying ? ICON.pause : ICON.play}
+        </button>
+        <div class="item-body">
+          <div class="item-head">
+            <span class="item-title" lang="en">${escapeHtml(head)}</span>
+            <span class="tag">${i.settings.accent}</span>
+          </div>
+          ${rest ? `<div class="item-snippet" lang="en">${escapeHtml(rest)}</div>` : ''}
+          <div class="item-meta">${itemMeta(i)}</div>
+        </div>
+        <div class="item-actions">
+          <button class="icon-btn" type="button" data-action="edit" data-id="${i.id}" aria-label="編集">${ICON.edit}</button>
+          <button class="icon-btn danger" type="button" data-action="delete" data-id="${i.id}" aria-label="削除">${ICON.trash}</button>
+        </div>
+      </div>`;
+  }
+
   function renderList() {
-    clearTimeout(listTimer);
-    renderFacts();
     const search = $('search');
-    search.classList.toggle('hidden', items.length < 6);
-    const q = items.length >= 6 ? search.value.trim().toLowerCase() : '';
+    const showSearch = items.length >= 6;
+    search.classList.toggle('hidden', !showSearch);
+    const q = showSearch ? search.value.trim().toLowerCase() : '';
 
     const filtered = items
-      .filter((i) => !q || i.title.toLowerCase().includes(q) || i.text.toLowerCase().includes(q))
+      .filter((i) => !q || i.text.toLowerCase().includes(q))
       .sort((a, b) => b.createdAt - a.createdAt);
 
     const list = $('list');
     if (!filtered.length) {
-      list.innerHTML = `<div class="empty">${items.length ? '一致する英文はありません' : '保存した英文はここに並びます'}</div>`;
+      list.innerHTML = `<div class="glass list"><div class="empty">${items.length ? '一致する英文はありません' : '保存した英文は、保存した日ごとにここに並びます'}</div></div>`;
       return;
     }
 
-    list.innerHTML = filtered.map((i) => {
-      const isCurrent = player.itemId === i.id && player.state !== 'idle';
-      const isActive = isCurrent && (player.state === 'playing' || player.state === 'loading');
-      const titleBase = i.title.replace(/…$/, '');
-      const showSnippet = !i.text.startsWith(titleBase);
-      const v = VOICE_INDEX[i.settings.voice];
+    const groups = [];
+    filtered.forEach((i) => {
+      const key = startOfDay(i.createdAt);
+      const last = groups[groups.length - 1];
+      if (last && last.key === key) last.items.push(i);
+      else groups.push({ key, items: [i] });
+    });
+
+    list.innerHTML = groups.map((g) => {
+      const h = dayHeading(g.key);
       return `
-        <div class="item ${isCurrent ? 'playing' : ''} ${editingId === i.id ? 'editing' : ''}">
-          <button class="item-play" type="button" data-action="play" data-id="${i.id}" aria-label="${isActive ? '一時停止' : '再生'}">
-            ${isActive ? ICON.pause : ICON.play}
-          </button>
-          <div class="item-body">
-            <div class="item-title">${escapeHtml(i.title)}<span class="tag">${i.settings.accent} · ${escapeHtml(v ? v.name : '')}</span></div>
-            ${showSnippet ? `<div class="item-snippet" lang="en">${escapeHtml(i.text)}</div>` : ''}
-            <div class="item-meta">${itemMeta(i)}</div>
+        <div class="group">
+          <div class="group-head">
+            <span class="group-date">${h.date}</span>
+            ${h.rel ? `<span class="group-rel">${h.rel}</span>` : ''}
+            <span class="group-count">${g.items.length}件</span>
           </div>
-          <div class="item-actions">
-            <button class="icon-btn" type="button" data-action="edit" data-id="${i.id}" aria-label="編集">${ICON.edit}</button>
-            <button class="icon-btn danger" type="button" data-action="delete" data-id="${i.id}" aria-label="削除">${ICON.trash}</button>
-          </div>
+          <div class="glass list">${g.items.map(itemHtml).join('')}</div>
         </div>`;
     }).join('');
   }
@@ -2067,7 +1896,7 @@
     saveItems();
     renderList();
     lastDeleted = { item: removed, index: idx };
-    toast(`「${truncate(removed.title, 16)}」を削除しました`, {
+    toast(`「${truncate(firstSentence(removed.text), 16)}」を削除しました`, {
       label: '取り消す',
       onClick: () => {
         if (!lastDeleted) return;
@@ -2080,45 +1909,21 @@
     }, 6000);
   }
 
-  // ---------- 再生 ----------
-  const audio = new Audio();
-  audio.preload = 'auto';
-  if ('preservesPitch' in audio) audio.preservesPitch = true;
-  else if ('webkitPreservesPitch' in audio) audio.webkitPreservesPitch = true;
-  else if ('mozPreservesPitch' in audio) audio.mozPreservesPitch = true;
-
-  const SILENT_URL = URL.createObjectURL(new Blob([writeWav(new Float32Array(1200), 24000, 1)], { type: 'audio/wav' }));
-  let audioUnlocked = false;
-  let audioUrl = null;
-
-  function unlockAudio() {
-    if (audioUnlocked) return;
-    audioUnlocked = true;
-    audio.src = SILENT_URL;
-    const p = audio.play();
-    if (p && p.catch) p.catch(() => {});
-  }
-
-  function setAudioBlob(blob, rate) {
-    if (audioUrl) URL.revokeObjectURL(audioUrl);
-    audioUrl = URL.createObjectURL(blob);
-    audio.src = audioUrl;
-    audio.defaultPlaybackRate = rate;
-    audio.playbackRate = rate;
-  }
-
+  // ---------- 再生エンジン ----------
   const player = {
     sentences: [],
-    index: 0,
-    rep: 0,
+    plan: [],
+    step: 0,
     settings: null,
     itemId: null,
-    title: '',
     state: 'idle',
     token: 0,
     timer: null,
-    raf: 0,
-    clipIndex: -1,
+    estimator: null,
+    pendTimer: null,
+    gotBoundary: false,
+    needGap: false,
+    live: [],
     rendered: -1,
     words: [],
     revealedMax: -1,
@@ -2126,8 +1931,29 @@
     logEntry: null
   };
 
+  // speak() から実際に話し始めるまでの時間（ミリ秒）。次の文を、この分だけ早めに準備する
+  const latency = { avg: 0, n: 0 };
+
+  function recordLatency(ms) {
+    const v = Math.min(1500, Math.max(0, ms));
+    latency.avg = latency.n ? latency.avg * 0.6 + v * 0.4 : v;
+    latency.n += 1;
+  }
+
+  function buildPlan(n, repeat) {
+    const plan = [];
+    for (let s = 0; s < n; s++) {
+      for (let r = 0; r < repeat; r++) plan.push({ s, r });
+    }
+    return plan;
+  }
+
+  function curSentence() {
+    if (!player.plan.length) return 0;
+    return player.plan[Math.min(player.step, player.plan.length - 1)].s;
+  }
+
   function playItem(item) {
-    unlockAudio();
     if (player.itemId === item.id && player.state !== 'idle') {
       togglePlay();
       return;
@@ -2138,177 +1964,244 @@
     item.playCount += 1;
     item.lastPlayedAt = entry.t;
     saveItems();
-    startPlayback({ text: item.text, settings: { ...item.settings }, itemId: item.id, title: item.title });
+    startPlayback({ text: item.text, settings: { ...item.settings }, itemId: item.id });
     player.logEntry = entry;
-    queueItem(item);
   }
 
   function startPlayback(opts) {
-    if (!SUPPORTED) {
-      toast('このブラウザでは音声を作成できません');
+    if (!synth) {
+      toast('このブラウザは読み上げに対応していません');
       return;
     }
-    unlockAudio();
     const sentences = splitSentences(opts.text);
     if (!sentences.length) return;
     stopDictation();
-    haltAudio();
     Object.assign(player, {
       sentences,
-      index: 0,
-      rep: 0,
+      plan: buildPlan(sentences.length, opts.settings.repeat),
+      step: 0,
       settings: opts.settings,
       itemId: opts.itemId,
-      title: opts.title,
       rendered: -1,
-      clipIndex: -1,
       logEntry: null
     });
-    $('pTitle').textContent = opts.title;
+    updatePlayerTitle();
     renderBar();
     showPlayer(true);
-    playCurrent();
+    playFrom(0);
     renderList();
   }
 
-  function haltAudio() {
-    player.token += 1;
-    clearTimeout(player.timer);
-    cancelAnimationFrame(player.raf);
-    audio.pause();
+  function updatePlayerTitle() {
+    if (!player.settings) return;
+    const e = findVoice(player.settings);
+    $('pTitle').textContent = e ? `${player.settings.accent} · ${e.label}` : player.settings.accent;
   }
 
-  function prefetch(i) {
-    if (i < player.sentences.length) {
-      getClip(player.settings.voice, player.sentences[i], true).catch(() => {});
+  function setPending(on) {
+    clearTimeout(player.pendTimer);
+    if (on) {
+      player.pendTimer = setTimeout(() => $('pPlay').classList.add('pending'), 250);
+    } else {
+      $('pPlay').classList.remove('pending');
     }
   }
 
-  async function playCurrent() {
-    haltAudio();
-    const token = player.token;
+  function clearTimers() {
+    clearTimeout(player.timer);
+    stopEstimator();
+  }
 
-    if (player.index >= player.sentences.length) {
+  function interrupt() {
+    player.token += 1;
+    clearTimers();
+    setPending(false);
+    player.live = [];
+    if (synth && (synth.speaking || synth.pending)) {
+      synth.cancel();
+      player.needGap = true;
+    }
+  }
+
+  function playFrom(step) {
+    interrupt();
+    send(step);
+  }
+
+  function send(step) {
+    const token = player.token;
+    clearTimers();
+
+    if (step >= player.plan.length) {
       if (player.settings.loop) {
-        player.index = 0;
-        player.rep = 0;
-        player.rendered = -1;
+        step = 0;
       } else {
         finishPlayback();
         return;
       }
     }
 
-    if (player.rendered !== player.index) renderSentence();
-    else resetReveal();
-    player.state = 'loading';
-    updatePlayerUI();
-
-    let blob;
-    try {
-      blob = await getClip(player.settings.voice, player.sentences[player.index], true);
-    } catch (e) {
-      if (token !== player.token) return;
-      player.state = 'paused';
-      updatePlayerUI();
-      renderList();
-      toast(engine.state === 'error'
-        ? '音声モデルを読み込めませんでした。通信状態を確認して、もう一度再生してください'
-        : 'この文の音声を作成できませんでした', null, 3600);
-      return;
-    }
-    if (token !== player.token) return;
-
-    prefetch(player.index + 1);
-    setAudioBlob(blob, player.settings.rate);
-    player.clipIndex = player.index;
+    player.step = step;
     player.state = 'playing';
+    const sIdx = player.plan[step].s;
+    if (player.rendered !== sIdx) renderSentence(sIdx);
+    clearNow();
     updatePlayerUI();
-    renderList();
 
-    try {
-      await audio.play();
-    } catch (e) {
+    waitVoices().then(() => {
+      if (token !== player.token || player.state !== 'playing') return;
+      speakNow(token, makeUtterance(token, step));
+    });
+  }
+
+  function speakNow(token, u) {
+    setPending(true);
+    const go = () => {
       if (token !== player.token) return;
+      u._queuedAt = performance.now();
+      player.live.push(u);
+      synth.speak(u);
+    };
+    // Chrome は cancel() の直後に speak() すると無視することがあるため、そのときだけ少し待つ
+    if (player.needGap || synth.speaking || synth.pending) {
+      player.needGap = false;
+      synth.cancel();
+      setTimeout(go, 40);
+    } else {
+      go();
+    }
+  }
+
+  // 文と文の間が0秒のときは、次の文を読み上げの待ち行列に先に入れて、途切れずにつなげる
+  function prequeue(token, step, current) {
+    let next = step + 1;
+    if (next >= player.plan.length) {
+      if (!player.settings.loop) return;
+      next = 0;
+    }
+    const nu = makeUtterance(token, next);
+    nu._prequeued = true;
+    current._hasNext = true;
+    player.live.push(nu);
+    synth.speak(nu);
+  }
+
+  function makeUtterance(token, step) {
+    const sIdx = player.plan[step].s;
+    const text = player.sentences[sIdx];
+    const u = new SpeechSynthesisUtterance(text);
+    const entry = findVoice(player.settings);
+    if (entry) {
+      u.voice = entry.v;
+      u.lang = (entry.v.lang || '').replace('_', '-') || langOf(player.settings.accent);
+    } else {
+      u.lang = langOf(player.settings.accent);
+    }
+    u.rate = player.settings.rate;
+
+    u.onstart = () => {
+      if (token !== player.token) return;
+      setPending(false);
+      if (u._queuedAt && !u._prequeued) recordLatency(performance.now() - u._queuedAt);
+      player.step = step;
+      if (player.rendered !== sIdx) renderSentence(sIdx);
+      clearNow();
+      player.gotBoundary = false;
+      updatePlayerUI();
+      startEstimator(token, step, text.length, u.rate);
+      if (player.settings.pause === 0) prequeue(token, step, u);
+    };
+
+    u.onboundary = (e) => {
+      if (token !== player.token || player.step !== step) return;
+      if (e.name && e.name !== 'word') return;
+      player.gotBoundary = true;
+      stopEstimator();
+      reveal(e.charIndex);
+    };
+
+    u.onend = () => {
+      if (token !== player.token || player.state !== 'playing') return;
+      stopEstimator();
+      revealAll();
+      if (u._hasNext) return;
+      const next = step + 1;
+      if (next >= player.plan.length && !player.settings.loop) {
+        finishPlayback();
+        return;
+      }
+      const wait = Math.max(0, player.settings.pause * 1000 - latency.avg);
+      player.timer = setTimeout(() => {
+        if (token === player.token && player.state === 'playing') send(next);
+      }, wait);
+    };
+
+    u.onerror = (e) => {
+      if (token !== player.token) return;
+      if (e.error === 'interrupted' || e.error === 'canceled') return;
+      stopEstimator();
+      setPending(false);
+      const retryable = ['synthesis-failed', 'synthesis-unavailable', 'network', 'voice-unavailable', 'language-unavailable'];
+      if (entry && retryable.includes(e.error)) {
+        failedVoices.add(entry.v.voiceURI);
+        loadVoices();
+        if (findVoice(player.settings)) {
+          toast('選んだ声を使えなかったため、別の声で再生しています', null, 3200);
+          updatePlayerTitle();
+          playFrom(step);
+          return;
+        }
+      }
       player.state = 'paused';
       updatePlayerUI();
       renderList();
-      return;
-    }
-    if (token !== player.token) return;
-    startRaf(token);
-  }
-
-  function onAudioEnded() {
-    if (player.state !== 'playing' || audio.src === SILENT_URL) return;
-    const token = player.token;
-    cancelAnimationFrame(player.raf);
-    revealAll();
-    player.rep += 1;
-    if (player.rep >= player.settings.repeat) {
-      player.rep = 0;
-      player.index += 1;
-    }
-    player.timer = setTimeout(() => {
-      if (token === player.token && player.state === 'playing') playCurrent();
-    }, player.settings.pause * 1000);
-  }
-
-  function startRaf(token) {
-    cancelAnimationFrame(player.raf);
-    const loop = () => {
-      if (token !== player.token || player.state !== 'playing') return;
-      const d = audio.duration;
-      if (d && Number.isFinite(d) && !audio.ended) revealAt(audio.currentTime / d);
-      player.raf = requestAnimationFrame(loop);
+      toast(`読み上げに失敗しました（${e.error}）`);
     };
-    player.raf = requestAnimationFrame(loop);
+
+    return u;
   }
 
-  function renderSentence() {
-    const s = player.sentences[player.index];
+  function startEstimator(token, step, length, rate) {
+    stopEstimator();
+    const charsPerSec = 14 * rate;
+    const t0 = performance.now();
+    player.estimator = setTimeout(function tick() {
+      if (token !== player.token || player.step !== step || player.gotBoundary) return;
+      const ci = Math.floor(((performance.now() - t0) / 1000) * charsPerSec);
+      reveal(Math.min(ci, length));
+      player.estimator = setTimeout(tick, 80);
+    }, 350);
+  }
+
+  function stopEstimator() {
+    clearTimeout(player.estimator);
+    player.estimator = null;
+  }
+
+  function renderSentence(sIdx) {
+    const s = player.sentences[sIdx];
     const el = $('pSentence');
     let html = '';
     let last = 0;
     s.replace(/\S+/g, (m, offset) => {
-      html += escapeHtml(s.slice(last, offset)) + `<span class="w">${escapeHtml(m)}</span>`;
+      html += escapeHtml(s.slice(last, offset)) + `<span class="w" data-s="${offset}">${escapeHtml(m)}</span>`;
       last = offset + m.length;
       return m;
     });
     html += escapeHtml(s.slice(last));
     el.innerHTML = html;
     el.scrollTop = 0;
-
-    const els = [...el.querySelectorAll('.w')];
-    const weights = els.map((w) => {
-      const t = w.textContent;
-      let x = t.replace(/[^A-Za-z0-9']/g, '').length + 1.2;
-      if (/[,;:]["'”’)]*$/.test(t)) x += 2.5;
-      return x;
-    });
-    const total = weights.reduce((a, b) => a + b, 0) || 1;
-    let acc = 0;
-    player.words = els.map((wEl, i) => {
-      const start = acc / total;
-      acc += weights[i];
-      return { el: wEl, start };
-    });
-    player.rendered = player.index;
+    player.words = [...el.querySelectorAll('.w')].map((w) => ({ el: w, start: Number(w.dataset.s) }));
+    player.rendered = sIdx;
     player.revealedMax = -1;
     player.nowIdx = -1;
   }
 
-  function resetReveal() {
-    player.words.forEach((w) => w.el.classList.remove('clear', 'now'));
-    player.revealedMax = -1;
-    player.nowIdx = -1;
-  }
-
-  function revealAt(frac) {
+  function reveal(charIndex) {
     const words = player.words;
     let k = -1;
     for (let i = 0; i < words.length; i++) {
-      if (words[i].start <= frac + 0.01) k = i;
+      if (words[i].start <= charIndex) k = i;
       else break;
     }
     if (k < 0) return;
@@ -2335,60 +2228,40 @@
   }
 
   function finishPlayback() {
+    clearTimers();
+    setPending(false);
     player.state = 'done';
-    player.index = player.sentences.length - 1;
+    player.step = player.plan.length - 1;
     revealAll();
     updatePlayerUI();
     renderList();
   }
 
   function togglePlay() {
-    unlockAudio();
-    if (player.state === 'playing' || player.state === 'loading') {
-      haltAudio();
+    if (player.state === 'playing') {
       player.state = 'paused';
+      interrupt();
       clearNow();
     } else if (player.state === 'paused') {
-      const canResume = player.clipIndex === player.index
-        && audio.src && audio.src !== SILENT_URL
-        && !audio.ended && audio.currentTime > 0;
-      if (canResume) {
-        player.token += 1;
-        const token = player.token;
-        player.state = 'playing';
-        audio.playbackRate = player.settings.rate;
-        audio.play().then(() => {
-          if (token === player.token) startRaf(token);
-        }).catch(() => {
-          if (token !== player.token) return;
-          player.state = 'paused';
-          updatePlayerUI();
-          renderList();
-        });
-      } else {
-        playCurrent();
-      }
+      playFrom(player.step);
     } else if (player.state === 'done') {
-      player.index = 0;
-      player.rep = 0;
       player.rendered = -1;
-      playCurrent();
+      playFrom(0);
     }
     updatePlayerUI();
     renderList();
   }
 
-  function jumpTo(index) {
+  function jumpTo(sIdx) {
     if (!player.sentences.length) return;
-    unlockAudio();
-    player.index = Math.max(0, Math.min(index, player.sentences.length - 1));
-    player.rep = 0;
-    player.rendered = -1;
-    playCurrent();
+    const wasPlaying = player.state === 'playing';
+    const s = Math.max(0, Math.min(sIdx, player.sentences.length - 1));
+    playFrom(s * player.settings.repeat);
+    if (!wasPlaying) renderList();
   }
 
   function stopPlayback() {
-    haltAudio();
+    interrupt();
     player.state = 'idle';
     player.itemId = null;
     player.logEntry = null;
@@ -2406,7 +2279,8 @@
 
   function renderBar() {
     const bar = $('pBar');
-    bar.classList.toggle('dense', player.sentences.length > 40);
+    const n = player.sentences.length;
+    bar.classList.toggle('dense', n > 40);
     bar.innerHTML = player.sentences
       .map((_, i) => `<button type="button" data-index="${i}" aria-label="${i + 1}文目"></button>`)
       .join('');
@@ -2414,8 +2288,9 @@
 
   function updatePlayerUI() {
     const n = player.sentences.length;
-    if (!n || !player.settings) return;
-    const idx = Math.min(player.index, n - 1);
+    if (!n) return;
+    const idx = curSentence();
+    const rep = player.plan[Math.min(player.step, player.plan.length - 1)].r;
     const done = player.state === 'done';
 
     [...$('pBar').children].forEach((seg, i) => {
@@ -2423,21 +2298,14 @@
       seg.classList.toggle('current', !done && i === idx);
     });
 
-    let progress;
-    if (player.state === 'loading') {
-      progress = engine.state === 'loading' ? engineLoadingLabel() : '音声を作成中…';
-    } else {
-      progress = `${idx + 1} / ${n}`;
-      if (player.settings.repeat > 1 && !done) progress += ` · ${player.rep + 1}/${player.settings.repeat}回目`;
+    let progress = `${idx + 1} / ${n}`;
+    if (player.settings.repeat > 1 && !done) {
+      progress += ` · ${rep + 1}/${player.settings.repeat}回目`;
     }
     $('pProgress').textContent = progress;
 
     const playBtn = $('pPlay');
-    playBtn.classList.toggle('loading', player.state === 'loading');
-    if (player.state === 'loading') {
-      playBtn.innerHTML = ICON.spinner;
-      playBtn.setAttribute('aria-label', '一時停止');
-    } else if (player.state === 'playing') {
+    if (player.state === 'playing') {
       playBtn.innerHTML = ICON.pause;
       playBtn.setAttribute('aria-label', '一時停止');
     } else if (done) {
@@ -2458,8 +2326,6 @@
     const cur = player.settings.rate;
     const next = RATES.find((r) => r > cur + 0.001) ?? RATES[0];
     player.settings.rate = next;
-    audio.defaultPlaybackRate = next;
-    audio.playbackRate = next;
 
     if (player.itemId) {
       const it = items.find((i) => i.id === player.itemId);
@@ -2473,7 +2339,12 @@
       $('rate').value = next;
       onFormChange();
     }
-    updatePlayerUI();
+
+    if (player.state === 'playing') {
+      jumpTo(curSentence());
+    } else {
+      updatePlayerUI();
+    }
   }
 
   function cycleMode() {
@@ -2481,67 +2352,6 @@
     savePrefs();
     $('pSentence').dataset.mode = prefs.display;
     updatePlayerUI();
-  }
-
-  // ---------- バックアップ ----------
-  function exportData() {
-    if (!items.length) {
-      toast('書き出す英文がありません');
-      return;
-    }
-    const blob = new Blob([JSON.stringify(items, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const d = new Date();
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `listening-${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}.json`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    toast(`${items.length}件を書き出しました`);
-  }
-
-  function importData(file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const data = JSON.parse(reader.result);
-        if (!Array.isArray(data)) throw new Error('invalid');
-        let added = 0;
-        data.forEach((d) => {
-          if (d && d.id && d.text && !items.some((i) => i.id === String(d.id))) {
-            items.push(normalizeItem(d));
-            added += 1;
-          }
-        });
-        saveItems();
-        renderList();
-        toast(added ? `${added}件を読み込みました` : '新しい英文はありませんでした');
-      } catch (e) {
-        toast('ファイルを読み込めませんでした。書き出したJSONファイルを選んでください', null, 3600);
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  // ---------- 起動時：保存済み音声の確認 ----------
-  async function initClips() {
-    if (!SUPPORTED) return;
-    try {
-      const keys = await idb.keys();
-      const used = new Set();
-      items.forEach((i) => splitSentences(i.text).forEach((s) => used.add(clipKey(i.settings.voice, s))));
-      keys.forEach((k) => {
-        if (used.has(k)) readySet.add(k);
-        else idb.del(k).catch(() => {});
-      });
-    } catch (e) {}
-    renderList();
-    if (prefs.modelReady) {
-      items.filter((i) => {
-        const p = itemProgress(i);
-        return p.ready < p.total;
-      }).forEach(queueItem);
-    }
   }
 
   // ---------- 初期化 ----------
@@ -2556,17 +2366,12 @@
     applyTheme();
     $('btnTheme').addEventListener('click', cycleTheme);
 
-    $('purpose').value = prefs.purpose || '';
-    $('purpose').addEventListener('input', (e) => {
-      prefs.purpose = e.target.value;
-      savePrefs();
-    });
-
     accentSeg = setupSegmented($('accentSeg'), formAccent, (v) => {
       formAccent = v;
       renderVoiceSelect();
       onFormChange();
       if (dictation.active) setMicUI();
+      if (player.state !== 'playing') warmUp(findVoice(getFormSettings()));
     });
 
     repeatSeg = setupSegmented($('repeatSeg'), formRepeat, (v) => {
@@ -2576,7 +2381,15 @@
 
     applyFormSettings(settingsFromPrefs());
 
-    if (!SUPPORTED) $('unsupported').classList.remove('hidden');
+    if (!synth) {
+      $('unsupported').classList.remove('hidden');
+    } else {
+      loadVoices();
+      synth.addEventListener('voiceschanged', loadVoices);
+      document.addEventListener('pointerdown', () => {
+        if (player.state !== 'playing') warmUp(findVoice(getFormSettings()));
+      }, { once: true, capture: true });
+    }
 
     if (Recognition) {
       $('btnMic').classList.remove('hidden');
@@ -2589,6 +2402,7 @@
     $('voice').addEventListener('change', (e) => {
       formVoice[formAccent] = e.target.value;
       onFormChange();
+      if (player.state !== 'playing') warmUp(findVoice(getFormSettings()));
     });
     ['rate', 'pause'].forEach((id) => $(id).addEventListener('input', onFormChange));
     $('loop').addEventListener('change', onFormChange);
@@ -2598,8 +2412,7 @@
       startPlayback({
         text: $('text').value,
         settings: getFormSettings(),
-        itemId: null,
-        title: $('title').value.trim() || '試聴'
+        itemId: null
       });
     });
     $('btnSave').addEventListener('click', saveCurrent);
@@ -2608,13 +2421,11 @@
     $('list').addEventListener('click', onListClick);
     $('search').addEventListener('input', renderList);
 
-    audio.addEventListener('ended', onAudioEnded);
-
     $('pPlay').addEventListener('click', togglePlay);
     $('pPrev').addEventListener('click', () => {
-      jumpTo(player.state === 'done' ? player.sentences.length - 1 : player.index - 1);
+      jumpTo(player.state === 'done' ? player.sentences.length - 1 : curSentence() - 1);
     });
-    $('pNext').addEventListener('click', () => jumpTo(player.index + 1));
+    $('pNext').addEventListener('click', () => jumpTo(curSentence() + 1));
     $('pClose').addEventListener('click', stopPlayback);
     $('pRate').addEventListener('click', cycleRate);
     $('pMode').addEventListener('click', cycleMode);
@@ -2630,14 +2441,6 @@
     sentenceEl.addEventListener('pointerup', peekOff);
     sentenceEl.addEventListener('pointerleave', peekOff);
     sentenceEl.addEventListener('pointercancel', peekOff);
-    sentenceEl.addEventListener('contextmenu', (e) => e.preventDefault());
-
-    $('btnExport').addEventListener('click', exportData);
-    $('btnImport').addEventListener('click', () => $('importFile').click());
-    $('importFile').addEventListener('change', (e) => {
-      if (e.target.files[0]) importData(e.target.files[0]);
-      e.target.value = '';
-    });
 
     document.addEventListener('keydown', (e) => {
       if (!$('player').classList.contains('show')) return;
@@ -2649,18 +2452,24 @@
         togglePlay();
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
-        jumpTo(player.index - 1);
+        jumpTo(curSentence() - 1);
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
-        jumpTo(player.index + 1);
+        jumpTo(curSentence() + 1);
       } else if (e.key === 'Escape') {
         stopPlayback();
       }
     });
 
-    renderEngineStatus();
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) renderList();
+    });
+
+    window.addEventListener('beforeunload', () => {
+      if (synth) synth.cancel();
+    });
+
     renderList();
-    initClips();
   }
 
   init();
