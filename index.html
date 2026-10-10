@@ -1,0 +1,772 @@
+<!-- Output: html -->
+<!-- File: listening-maker.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Listening Maker</title>
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --text: #1f2937;
+    --sub: #6b7280;
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --danger: #dc2626;
+    --border: #e5e7eb;
+    --hl: #fef3c7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff;
+    padding: 18px 20px;
+  }
+  header h1 { margin: 0; font-size: 1.4rem; }
+  header p { margin: 4px 0 0; font-size: 0.9rem; opacity: 0.9; }
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px 16px 120px;
+    display: grid;
+    gap: 20px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  .card h2 { margin: 0 0 14px; font-size: 1.15rem; }
+  label { font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 4px; }
+  input[type="text"], textarea, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #fff;
+  }
+  textarea { min-height: 160px; resize: vertical; }
+  .row { margin-bottom: 14px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .hint { font-size: 0.8rem; color: var(--sub); }
+  input[type="range"] { width: 100%; }
+  .btns { display: flex; flex-wrap: wrap; gap: 8px; }
+  button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    background: #e5e7eb;
+    color: var(--text);
+    font-family: inherit;
+  }
+  button:hover { filter: brightness(0.95); }
+  button.primary { background: var(--primary); color: #fff; }
+  button.primary:hover { background: var(--primary-dark); }
+  button.danger { background: #fee2e2; color: var(--danger); }
+  button.small { padding: 6px 10px; font-size: 0.85rem; }
+  .hidden { display: none !important; }
+
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .toolbar input { flex: 1; min-width: 180px; }
+
+  .item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .item.active { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(79,70,229,0.15); }
+  .item-head { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .item-title { font-weight: 700; }
+  .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #e0e7ff;
+    color: var(--primary-dark);
+    margin-left: 6px;
+  }
+  .meta { font-size: 0.8rem; color: var(--sub); margin: 4px 0 8px; }
+  .snippet { font-size: 0.9rem; color: #374151; margin-bottom: 10px; word-break: break-word; }
+  .snippet.blur { filter: blur(5px); user-select: none; }
+  .empty { text-align: center; color: var(--sub); padding: 20px; }
+
+  #playerPanel {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    background: #111827;
+    color: #fff;
+    padding: 12px 16px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    z-index: 10;
+  }
+  .player-inner { max-width: 960px; margin: 0 auto; }
+  .player-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+  #playerTitle { font-weight: 700; }
+  #progress { font-size: 0.85rem; opacity: 0.8; }
+  #sentences {
+    max-height: 30vh;
+    overflow-y: auto;
+    margin: 10px 0;
+    padding: 10px;
+    background: #1f2937;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  #sentences.blur .sentence { filter: blur(6px); }
+  #sentences.blur .sentence.current { filter: blur(6px); }
+  .sentence { cursor: pointer; padding: 1px 2px; border-radius: 4px; }
+  .sentence:hover { background: #374151; }
+  .sentence.current { background: var(--hl); color: #111827; }
+  #playerPanel button { background: #374151; color: #fff; }
+  #playerPanel button.primary { background: var(--primary); }
+  .player-controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .player-controls label { display: inline-flex; align-items: center; gap: 4px; font-weight: normal; margin: 0 0 0 auto; cursor: pointer; }
+
+  #toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #111827;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 20;
+  }
+  #toast.show { opacity: 1; }
+  .warn { background: #fef2f2; color: var(--danger); padding: 10px; border-radius: 8px; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎧 English Listening Maker</h1>
+  <p>英文を入力 → 音声で再生 → 保存して翌日も復習</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2 id="formHeading">✍️ 新しいリスニング教材を作成</h2>
+    <div id="unsupported" class="warn hidden">このブラウザは音声合成に対応していません。Chrome / Edge / Safari の最新版をお使いください。</div>
+
+    <div class="row">
+      <label for="title">タイトル（任意）</label>
+      <input type="text" id="title" placeholder="例: Day 1 - Self Introduction">
+    </div>
+
+    <div class="row">
+      <label for="text">英文</label>
+      <textarea id="text" placeholder="Hello. My name is Ken. I live in Tokyo. I like playing soccer on weekends."></textarea>
+      <div class="hint"><span id="charCount">0</span> 文字 / <span id="sentenceCount">0</span> 文</div>
+    </div>
+
+    <div class="grid row">
+      <div>
+        <label for="voice">音声（声の種類）</label>
+        <select id="voice"></select>
+      </div>
+      <div>
+        <label for="rate">速さ: <span id="rateVal">1.0</span>x</label>
+        <input type="range" id="rate" min="0.5" max="1.5" step="0.05" value="1">
+      </div>
+      <div>
+        <label for="pitch">声の高さ: <span id="pitchVal">1.0</span></label>
+        <input type="range" id="pitch" min="0.5" max="1.5" step="0.05" value="1">
+      </div>
+      <div>
+        <label for="pause">文ごとの間隔: <span id="pauseVal">1.0</span>秒</label>
+        <input type="range" id="pause" min="0" max="5" step="0.5" value="1">
+      </div>
+      <div>
+        <label for="repeat">1文の繰り返し回数</label>
+        <select id="repeat">
+          <option value="1">1回</option>
+          <option value="2">2回</option>
+          <option value="3">3回</option>
+          <option value="5">5回</option>
+        </select>
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <label style="font-weight:normal; display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input type="checkbox" id="loop"> 最後まで再生したら最初から繰り返す
+        </label>
+      </div>
+    </div>
+
+    <div class="btns">
+      <button id="btnPreview">▶ 試しに再生</button>
+      <button id="btnSave" class="primary">💾 保存する</button>
+      <button id="btnCancelEdit" class="hidden">編集をやめる</button>
+      <button id="btnClear">クリア</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>📚 保存済みの教材</h2>
+    <div class="toolbar">
+      <input type="text" id="search" placeholder="🔍 タイトル・本文で検索">
+      <label style="font-weight:normal; display:flex; align-items:center; gap:4px; margin:0; cursor:pointer;">
+        <input type="checkbox" id="hideSnippet"> 本文を隠す
+      </label>
+    </div>
+    <div id="list"></div>
+    <div class="btns" style="margin-top:10px;">
+      <button id="btnExport" class="small">⬇ バックアップを書き出す</button>
+      <button id="btnImport" class="small">⬆ バックアップを読み込む</button>
+      <input type="file" id="importFile" accept="application/json" class="hidden">
+    </div>
+  </section>
+</main>
+
+<div id="playerPanel" class="hidden">
+  <div class="player-inner">
+    <div class="player-top">
+      <span id="playerTitle"></span>
+      <span id="progress"></span>
+    </div>
+    <div id="sentences"></div>
+    <div class="player-controls">
+      <button id="btnPrev" class="small">⏮ 前の文</button>
+      <button id="btnPause" class="small primary">⏸ 一時停止</button>
+      <button id="btnNext" class="small">次の文 ⏭</button>
+      <button id="btnStop" class="small">⏹ 停止</button>
+      <label><input type="checkbox" id="hideScript"> スクリプトを隠す</label>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  const STORAGE_KEY = 'listeningMaker.items.v1';
+  const $ = (id) => document.getElementById(id);
+  const synth = window.speechSynthesis;
+
+  let voices = [];
+  let items = loadItems();
+  let editingId = null;
+
+  const player = {
+    sentences: [],
+    index: 0,
+    repeatCount: 0,
+    settings: null,
+    token: 0,
+    playing: false,
+    paused: false,
+    itemId: null,
+    timer: null
+  };
+
+  // ---------- 保存 ----------
+  function loadItems() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveItems() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }
+
+  // ---------- ユーティリティ ----------
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  function toast(msg) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function splitSentences(text) {
+    const cleaned = text.replace(/\s+/g, ' ').trim();
+    if (!cleaned) return [];
+    const parts = cleaned.match(/[^.!?]+[.!?]+["')\]]*|[^.!?]+$/g) || [cleaned];
+    return parts.map((s) => s.trim()).filter(Boolean);
+  }
+
+  function formatDate(ts) {
+    if (!ts) return '-';
+    return new Date(ts).toLocaleString('ja-JP', {
+      year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  function dayLabel(ts) {
+    const d = new Date(ts);
+    const today = new Date();
+    const start = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+    const diff = Math.round((start(today) - start(d)) / 86400000);
+    if (diff === 0) return '今日';
+    if (diff === 1) return '昨日';
+    return diff + '日前';
+  }
+
+  // ---------- 音声一覧 ----------
+  function loadVoices() {
+    voices = synth.getVoices().filter((v) => v.lang.toLowerCase().startsWith('en'));
+    const sel = $('voice');
+    const current = sel.value;
+    sel.innerHTML = '';
+    if (!voices.length) {
+      const o = document.createElement('option');
+      o.value = '';
+      o.textContent = '既定の英語音声';
+      sel.appendChild(o);
+      return;
+    }
+    voices.forEach((v) => {
+      const o = document.createElement('option');
+      o.value = v.voiceURI;
+      o.textContent = `${v.name} (${v.lang})`;
+      sel.appendChild(o);
+    });
+    if (current && voices.some((v) => v.voiceURI === current)) {
+      sel.value = current;
+    } else {
+      const pref = voices.find((v) => v.lang === 'en-US') || voices[0];
+      sel.value = pref.voiceURI;
+    }
+  }
+
+  function findVoice(settings) {
+    return voices.find((v) => v.voiceURI === settings.voiceURI)
+      || voices.find((v) => v.name === settings.voiceName)
+      || voices.find((v) => v.lang === 'en-US')
+      || voices[0]
+      || null;
+  }
+
+  // ---------- フォーム ----------
+  function getFormSettings() {
+    const voice = voices.find((v) => v.voiceURI === $('voice').value);
+    return {
+      voiceURI: $('voice').value,
+      voiceName: voice ? voice.name : '',
+      rate: parseFloat($('rate').value),
+      pitch: parseFloat($('pitch').value),
+      pause: parseFloat($('pause').value),
+      repeat: parseInt($('repeat').value, 10),
+      loop: $('loop').checked
+    };
+  }
+
+  function setFormSettings(s) {
+    if (s.voiceURI && voices.some((v) => v.voiceURI === s.voiceURI)) {
+      $('voice').value = s.voiceURI;
+    }
+    $('rate').value = s.rate;
+    $('pitch').value = s.pitch;
+    $('pause').value = s.pause;
+    $('repeat').value = String(s.repeat);
+    $('loop').checked = !!s.loop;
+    updateLabels();
+  }
+
+  function updateLabels() {
+    $('rateVal').textContent = parseFloat($('rate').value).toFixed(2);
+    $('pitchVal').textContent = parseFloat($('pitch').value).toFixed(2);
+    $('pauseVal').textContent = parseFloat($('pause').value).toFixed(1);
+    const text = $('text').value;
+    $('charCount').textContent = text.length;
+    $('sentenceCount').textContent = splitSentences(text).length;
+  }
+
+  function resetForm() {
+    editingId = null;
+    $('title').value = '';
+    $('text').value = '';
+    $('formHeading').textContent = '✍️ 新しいリスニング教材を作成';
+    $('btnSave').textContent = '💾 保存する';
+    $('btnCancelEdit').classList.add('hidden');
+    updateLabels();
+    renderList();
+  }
+
+  function saveCurrent() {
+    const text = $('text').value.trim();
+    if (!text) {
+      toast('英文を入力してください');
+      return;
+    }
+    const title = $('title').value.trim() || text.slice(0, 30) + (text.length > 30 ? '…' : '');
+    const settings = getFormSettings();
+
+    if (editingId) {
+      const item = items.find((i) => i.id === editingId);
+      if (item) {
+        item.title = title;
+        item.text = text;
+        item.settings = settings;
+        item.updatedAt = Date.now();
+      }
+      toast('上書き保存しました');
+    } else {
+      items.push({
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+        title,
+        text,
+        settings,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        lastPlayedAt: null,
+        playCount: 0
+      });
+      toast('保存しました');
+    }
+    saveItems();
+    resetForm();
+  }
+
+  // ---------- 一覧 ----------
+  function renderList() {
+    const q = $('search').value.trim().toLowerCase();
+    const hide = $('hideSnippet').checked;
+    const list = $('list');
+    const filtered = items
+      .filter((i) => !q || i.title.toLowerCase().includes(q) || i.text.toLowerCase().includes(q))
+      .sort((a, b) => b.createdAt - a.createdAt);
+
+    if (!filtered.length) {
+      list.innerHTML = `<div class="empty">${items.length ? '該当する教材がありません' : 'まだ保存された教材はありません'}</div>`;
+      return;
+    }
+
+    list.innerHTML = filtered.map((i) => {
+      const s = i.settings;
+      const active = player.playing && player.itemId === i.id;
+      const snippet = i.text.length > 140 ? i.text.slice(0, 140) + '…' : i.text;
+      return `
+        <div class="item ${active ? 'active' : ''} ${editingId === i.id ? 'active' : ''}">
+          <div class="item-head">
+            <div class="item-title">${escapeHtml(i.title)}<span class="badge">${dayLabel(i.createdAt)}</span></div>
+            <div class="btns">
+              ${active
+                ? `<button class="small" data-action="stop">⏹ 停止</button>`
+                : `<button class="small primary" data-action="play" data-id="${i.id}">▶ 再生</button>`}
+              <button class="small" data-action="edit" data-id="${i.id}">✏️ 編集</button>
+              <button class="small danger" data-action="delete" data-id="${i.id}">🗑 削除</button>
+            </div>
+          </div>
+          <div class="meta">
+            作成: ${formatDate(i.createdAt)} ／ 最終再生: ${formatDate(i.lastPlayedAt)} ／ 再生回数: ${i.playCount || 0}回<br>
+            速さ ${s.rate}x ・ 間隔 ${s.pause}秒 ・ 繰り返し ${s.repeat}回 ・ ${escapeHtml(s.voiceName || '既定音声')}
+          </div>
+          <div class="snippet ${hide ? 'blur' : ''}">${escapeHtml(snippet)}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function handleListClick(e) {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    const action = btn.dataset.action;
+    const item = items.find((i) => i.id === id);
+
+    if (action === 'play' && item) {
+      item.lastPlayedAt = Date.now();
+      item.playCount = (item.playCount || 0) + 1;
+      saveItems();
+      startPlayback(item.text, item.settings, item.id, item.title);
+    } else if (action === 'stop') {
+      stopPlayback();
+    } else if (action === 'edit' && item) {
+      editingId = item.id;
+      $('title').value = item.title;
+      $('text').value = item.text;
+      setFormSettings(item.settings);
+      $('formHeading').textContent = '✏️ 教材を編集中';
+      $('btnSave').textContent = '💾 上書き保存';
+      $('btnCancelEdit').classList.remove('hidden');
+      renderList();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (action === 'delete' && item) {
+      if (!confirm(`「${item.title}」を削除しますか？`)) return;
+      if (player.itemId === item.id) stopPlayback();
+      items = items.filter((i) => i.id !== id);
+      saveItems();
+      if (editingId === id) resetForm();
+      renderList();
+      toast('削除しました');
+    }
+  }
+
+  // ---------- 再生エンジン ----------
+  function startPlayback(text, settings, itemId, title) {
+    stopPlayback(true);
+    const sentences = splitSentences(text);
+    if (!sentences.length) {
+      toast('英文を入力してください');
+      return;
+    }
+    Object.assign(player, {
+      sentences,
+      index: 0,
+      repeatCount: 0,
+      settings,
+      itemId,
+      playing: true,
+      paused: false
+    });
+    $('playerTitle').textContent = title || 'プレビュー';
+    $('sentences').innerHTML = sentences
+      .map((s, i) => `<span class="sentence" data-index="${i}">${escapeHtml(s)}</span> `)
+      .join('');
+    $('playerPanel').classList.remove('hidden');
+    updatePlayerUI();
+    renderList();
+    speakCurrent();
+  }
+
+  function speakCurrent() {
+    const token = ++player.token;
+    clearTimeout(player.timer);
+
+    if (player.index >= player.sentences.length) {
+      if (player.settings.loop) {
+        player.index = 0;
+        player.repeatCount = 0;
+      } else {
+        finishPlayback();
+        return;
+      }
+    }
+
+    updatePlayerUI();
+    synth.cancel();
+
+    const u = new SpeechSynthesisUtterance(player.sentences[player.index]);
+    const voice = findVoice(player.settings);
+    if (voice) {
+      u.voice = voice;
+      u.lang = voice.lang;
+    } else {
+      u.lang = 'en-US';
+    }
+    u.rate = player.settings.rate;
+    u.pitch = player.settings.pitch;
+
+    u.onend = () => {
+      if (token !== player.token || !player.playing || player.paused) return;
+      player.repeatCount++;
+      if (player.repeatCount >= player.settings.repeat) {
+        player.repeatCount = 0;
+        player.index++;
+      }
+      player.timer = setTimeout(() => {
+        if (token === player.token && player.playing && !player.paused) speakCurrent();
+      }, player.settings.pause * 1000);
+    };
+
+    u.onerror = (e) => {
+      if (token !== player.token) return;
+      if (e.error === 'interrupted' || e.error === 'canceled') return;
+      toast('音声エラー: ' + e.error);
+    };
+
+    // Chrome で cancel 直後の speak が無視される対策
+    setTimeout(() => {
+      if (token === player.token) synth.speak(u);
+    }, 60);
+  }
+
+  function interrupt() {
+    player.token++;
+    clearTimeout(player.timer);
+    synth.cancel();
+  }
+
+  function stopPlayback(silent) {
+    interrupt();
+    player.playing = false;
+    player.paused = false;
+    player.itemId = null;
+    $('playerPanel').classList.add('hidden');
+    if (!silent) renderList();
+  }
+
+  function finishPlayback() {
+    player.playing = false;
+    player.paused = false;
+    player.index = player.sentences.length - 1;
+    updatePlayerUI();
+    $('btnPause').textContent = '🔁 もう一度';
+    $('progress').textContent = '再生完了';
+    renderList();
+  }
+
+  function togglePause() {
+    if (!player.playing) {
+      // 再生完了後の「もう一度」
+      player.index = 0;
+      player.repeatCount = 0;
+      player.playing = true;
+      player.paused = false;
+      speakCurrent();
+      renderList();
+      return;
+    }
+    if (player.paused) {
+      player.paused = false;
+      speakCurrent();
+    } else {
+      player.paused = true;
+      interrupt();
+      updatePlayerUI();
+    }
+  }
+
+  function jumpTo(index) {
+    if (!player.sentences.length) return;
+    player.index = Math.max(0, Math.min(index, player.sentences.length - 1));
+    player.repeatCount = 0;
+    if (!player.playing) {
+      player.playing = true;
+      renderList();
+    }
+    player.paused = false;
+    speakCurrent();
+  }
+
+  function updatePlayerUI() {
+    const idx = Math.min(player.index, player.sentences.length - 1);
+    document.querySelectorAll('.sentence').forEach((el) => {
+      el.classList.toggle('current', Number(el.dataset.index) === idx);
+    });
+    const cur = document.querySelector('.sentence.current');
+    if (cur) cur.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+
+    const repInfo = player.settings && player.settings.repeat > 1
+      ? `（${player.repeatCount + 1}/${player.settings.repeat}回目）`
+      : '';
+    $('progress').textContent = `${idx + 1} / ${player.sentences.length} 文 ${repInfo}${player.paused ? ' ・ 一時停止中' : ''}`;
+    $('btnPause').textContent = player.paused ? '▶ 再開' : '⏸ 一時停止';
+  }
+
+  // ---------- バックアップ ----------
+  function exportData() {
+    const blob = new Blob([JSON.stringify(items, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const d = new Date();
+    a.href = url;
+    a.download = `listening-backup-${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importData(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (!Array.isArray(data)) throw new Error('invalid');
+        let added = 0;
+        data.forEach((d) => {
+          if (d && d.id && d.text && !items.some((i) => i.id === d.id)) {
+            items.push(d);
+            added++;
+          }
+        });
+        saveItems();
+        renderList();
+        toast(`${added}件を読み込みました`);
+      } catch (e) {
+        toast('ファイルの形式が正しくありません');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // ---------- 初期化 ----------
+  function init() {
+    if (!('speechSynthesis' in window)) {
+      $('unsupported').classList.remove('hidden');
+      return;
+    }
+
+    loadVoices();
+    if (typeof synth.onvoiceschanged !== 'undefined') {
+      synth.onvoiceschanged = loadVoices;
+    }
+
+    ['rate', 'pitch', 'pause', 'text'].forEach((id) => $(id).addEventListener('input', updateLabels));
+
+    $('btnPreview').addEventListener('click', () => {
+      startPlayback($('text').value, getFormSettings(), null, ($('title').value.trim() || 'プレビュー'));
+    });
+    $('btnSave').addEventListener('click', saveCurrent);
+    $('btnCancelEdit').addEventListener('click', resetForm);
+    $('btnClear').addEventListener('click', () => {
+      $('title').value = '';
+      $('text').value = '';
+      updateLabels();
+    });
+
+    $('list').addEventListener('click', handleListClick);
+    $('search').addEventListener('input', renderList);
+    $('hideSnippet').addEventListener('change', renderList);
+
+    $('btnPause').addEventListener('click', togglePause);
+    $('btnStop').addEventListener('click', () => stopPlayback());
+    $('btnPrev').addEventListener('click', () => jumpTo(player.index - 1));
+    $('btnNext').addEventListener('click', () => jumpTo(player.index + 1));
+    $('sentences').addEventListener('click', (e) => {
+      const s = e.target.closest('.sentence');
+      if (s) jumpTo(Number(s.dataset.index));
+    });
+    $('hideScript').addEventListener('change', (e) => {
+      $('sentences').classList.toggle('blur', e.target.checked);
+    });
+
+    $('btnExport').addEventListener('click', exportData);
+    $('btnImport').addEventListener('click', () => $('importFile').click());
+    $('importFile').addEventListener('change', (e) => {
+      if (e.target.files[0]) importData(e.target.files[0]);
+      e.target.value = '';
+    });
+
+    window.addEventListener('beforeunload', () => synth.cancel());
+
+    updateLabels();
+    renderList();
+  }
+
+  init();
+</script>
+</body>
+</html>
