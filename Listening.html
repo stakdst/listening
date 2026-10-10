@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>Listening</title>
+<style>
+:root{color-scheme:light;--bg:#f2f2f7;--text:rgba(0,0,0,.88);--sub:rgba(60,60,67,.62);--faint:rgba(60,60,67,.36);--glass:rgba(255,255,255,.45);--field:rgba(118,118,128,.1);--hair:rgba(0,0,0,.07);--hi:rgba(255,255,255,.9);--thumb:rgba(255,255,255,.96);--accent:#007aff;--accent-soft:rgba(0,122,255,.12);--danger:#ff3b30;--track:rgba(0,0,0,.12);--orb:.45;--shadow:0 10px 36px rgba(0,0,0,.1),0 2px 6px rgba(0,0,0,.05);--spring:cubic-bezier(.34,1.56,.64,1)}
+:root[data-theme=dark]{color-scheme:dark;--bg:#000;--text:rgba(255,255,255,.92);--sub:rgba(235,235,245,.62);--faint:rgba(235,235,245,.34);--glass:rgba(70,70,76,.34);--field:rgba(118,118,128,.2);--hair:rgba(255,255,255,.1);--hi:rgba(255,255,255,.22);--thumb:rgba(110,110,116,.95);--accent:#0a84ff;--accent-soft:rgba(10,132,255,.24);--danger:#ff453a;--track:rgba(255,255,255,.18);--orb:.8;--shadow:0 14px 40px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.4)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#000;--text:rgba(255,255,255,.92);--sub:rgba(235,235,245,.62);--faint:rgba(235,235,245,.34);--glass:rgba(70,70,76,.34);--field:rgba(118,118,128,.2);--hair:rgba(255,255,255,.1);--hi:rgba(255,255,255,.22);--thumb:rgba(110,110,116,.95);--accent:#0a84ff;--accent-soft:rgba(10,132,255,.24);--danger:#ff453a;--track:rgba(255,255,255,.18);--orb:.8;--shadow:0 14px 40px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.4)}}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{margin:0;background:var(--bg)}
+body{min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Hiragino Sans","Noto Sans JP",sans-serif;color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+.hidden{display:none!important}
+svg{display:block}
+/* 背景：ゆらぐ色の光（ガラス越しに透けて見える） */
+.bd{position:fixed;inset:0;z-index:-1;overflow:hidden;background:var(--bg)}
+.bd::before{content:"";position:absolute;inset:-30%;opacity:var(--orb);will-change:transform;animation:drift 34s ease-in-out infinite alternate;background:radial-gradient(34% 26% at 22% 14%,#0a84ff,transparent 70%),radial-gradient(30% 24% at 82% 24%,#bf5af2,transparent 70%),radial-gradient(36% 28% at 76% 80%,#ff9f0a,transparent 70%),radial-gradient(32% 26% at 14% 84%,#30d158,transparent 70%)}
+@keyframes drift{to{transform:translate3d(4%,3%,0) rotate(10deg) scale(1.1)}}
+/* Liquid Glass */
+.glass{position:relative;background:var(--glass);-webkit-backdrop-filter:blur(24px) saturate(190%) brightness(1.05);backdrop-filter:blur(24px) saturate(190%) brightness(1.05);box-shadow:0 0 0 .5px var(--hair),var(--shadow),inset 0 1px 1px var(--hi),inset 0 -1px 1px var(--hi),inset 0 0 24px rgba(255,255,255,.08)}
+.glass::before,.glass::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none}
+.glass::before{padding:1px;background:linear-gradient(140deg,rgba(255,255,255,.95),rgba(255,255,255,.1) 28%,transparent 52%,rgba(255,255,255,.14) 76%,rgba(255,255,255,.7));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.glass::after{background:radial-gradient(120% 60% at 16% -10%,rgba(255,255,255,.3),transparent 60%)}
+main{max-width:680px;margin:0 auto;padding:calc(24px + env(safe-area-inset-top,0px)) 16px calc(40px + env(safe-area-inset-bottom,0px));display:grid;gap:28px}
+body.hp main{padding-bottom:calc(330px + env(safe-area-inset-bottom,0px))}
+.hero{padding:10px 6px 0}
+h1{margin:0;font-size:2.2rem;font-weight:700;letter-spacing:-.022em}
+.card{padding:20px;border-radius:36px}
+.notice{margin:0 0 14px;padding:12px 14px;border-radius:16px;background:rgba(255,59,48,.12);color:var(--danger);font-size:.9rem}
+.stack{display:grid;gap:12px}
+/* 部品 */
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .5s var(--spring),background-color .2s,opacity .2s}
+button:active:not(:disabled){transform:scale(.93)}
+button:disabled{opacity:.38;cursor:default}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.field{width:100%;padding:12px 16px;border:0;border-radius:22px;background:var(--field);color:var(--text);font:inherit;font-size:16px;box-shadow:inset 0 1px 3px rgba(0,0,0,.08),inset 0 0 0 .5px var(--hair);transition:box-shadow .25s}
+.field:focus{outline:0;box-shadow:inset 0 0 0 1.5px var(--accent)}
+.field::placeholder{color:var(--faint)}
+textarea.field{display:block;min-height:170px;resize:vertical;line-height:1.6}
+select.field{appearance:none;-webkit-appearance:none;height:44px;padding:0 36px 0 16px;border-radius:999px;cursor:pointer;background:var(--field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238e8e93' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 15px center/12px}
+select.field:disabled{color:var(--sub)}
+.count{min-height:1.2em;margin:-4px 6px 0;font-size:.8rem;color:var(--sub);font-variant-numeric:tabular-nums}
+.vrow{display:grid;grid-template-columns:128px 1fr;gap:10px;align-items:center}
+.hint{margin:-2px 6px 0;font-size:.8rem;color:var(--sub)}
+.seg{position:relative;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;padding:3px;border-radius:999px;background:var(--field);box-shadow:inset 0 1px 3px rgba(0,0,0,.08)}
+.seg button{position:relative;z-index:1;height:36px;font-size:.9rem;font-weight:600;color:var(--sub);transition:color .25s}
+.seg button:active:not(:disabled){transform:none}
+.seg button[aria-pressed=true]{color:var(--text)}
+.seg.sm button{height:30px;font-size:.84rem}
+.thumb{position:absolute;top:3px;bottom:3px;left:3px;width:calc((100% - 6px)/var(--n,2));transform:translateX(calc(100%*var(--i,0)));border-radius:999px;background:var(--thumb);box-shadow:0 4px 14px rgba(0,0,0,.16),inset 0 1px 1px var(--hi),0 0 0 .5px var(--hair);transition:transform .5s var(--spring)}
+.settings{border-radius:22px;background:var(--field)}
+.settings summary{display:flex;align-items:center;gap:8px;padding:13px 16px;list-style:none;cursor:pointer;font-size:.95rem}
+.settings summary::-webkit-details-marker{display:none}
+.settings summary::after{content:"";width:7px;height:7px;margin:0 3px 2px 4px;border:solid var(--sub);border-width:0 2px 2px 0;transform:rotate(-45deg);transition:transform .35s var(--spring)}
+.settings[open] summary::after{transform:rotate(45deg)}
+.sv{margin-left:auto;color:var(--sub);font-size:.85rem;font-variant-numeric:tabular-nums}
+.sbody{display:grid;gap:16px;padding:2px 16px 18px}
+.sh{display:flex;justify-content:space-between;font-size:.9rem}
+.sh output{color:var(--sub);font-variant-numeric:tabular-nums}
+.si{display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:.9rem;cursor:pointer}
+.si .seg{width:200px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:30px;margin:0;background:transparent;cursor:pointer}
+input[type=range]:focus{outline:0}
+input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:5px;background:linear-gradient(to right,var(--accent) var(--p,50%),var(--track) var(--p,50%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:40px;height:26px;margin-top:-10.5px;border-radius:999px;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.25),inset 0 0 0 .5px rgba(0,0,0,.06)}
+input[type=range]::-moz-range-track{height:5px;border-radius:5px;background:var(--track)}
+input[type=range]::-moz-range-progress{height:5px;border-radius:5px;background:var(--accent)}
+input[type=range]::-moz-range-thumb{width:40px;height:26px;border:0;border-radius:999px;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+.sw{position:relative;width:64px;height:30px;flex:none}
+.sw input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;z-index:1}
+.sw i{position:absolute;inset:0;border-radius:999px;background:var(--track);transition:background-color .3s}
+.sw i::after{content:"";position:absolute;top:2px;left:2px;width:42px;height:26px;border-radius:999px;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.22);transition:transform .45s var(--spring)}
+.sw input:checked+i{background:#34c759}
+.sw input:checked+i::after{transform:translateX(18px)}
+.actions{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:4px}
+.lk{color:var(--accent);font-size:.95rem;padding:4px 6px}
+.actions .lk{margin-right:auto}
+.btn{height:46px;min-width:96px;padding:0 24px;border-radius:999px;font-size:.95rem;font-weight:600;background:var(--field);box-shadow:inset 0 1px 1px var(--hi),0 0 0 .5px var(--hair)}
+.btn.pri{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 80%,#fff),var(--accent));color:#fff;box-shadow:inset 0 1px 1px rgba(255,255,255,.6),inset 0 -1px 2px rgba(0,0,0,.14),0 8px 22px color-mix(in srgb,var(--accent) 38%,transparent)}
+.ib{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:none;color:var(--sub)}
+.ib svg{width:20px;height:20px}
+.ib:hover{background:var(--field)}
+.ib.dg:hover{color:var(--danger)}
+/* ライブラリ */
+.library{display:grid;gap:24px}
+.gh{display:flex;align-items:baseline;gap:8px;margin:0 8px 8px}
+.gd{font-size:1.05rem;font-weight:700}
+.gr{font-size:.82rem;color:var(--sub)}
+.gc{margin-left:auto;font-size:.8rem;color:var(--faint)}
+.list{overflow:hidden;border-radius:30px}
+.item{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 12px 14px 16px;transition:background-color .2s}
+.item+.item::after{content:"";position:absolute;top:0;left:74px;right:0;height:1px;background:var(--hair)}
+.item.editing{background:var(--accent-soft)}
+.ip{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.ip svg{width:18px;height:18px}
+.item.playing .ip{background:var(--accent);color:#fff}
+.body{min-width:0}
+.ih{display:flex;align-items:center;gap:6px;min-width:0}
+.it{min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{flex:none;padding:0 6px;border-radius:6px;background:var(--field);color:var(--sub);font-size:.66rem;font-weight:700;letter-spacing:.05em;line-height:1.6}
+.isn{font-size:.88rem;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.im{margin-top:2px;font-size:.76rem;color:var(--faint);font-variant-numeric:tabular-nums}
+.ia{display:flex;gap:2px}
+.empty{padding:36px 20px;text-align:center;color:var(--sub);font-size:.92rem}
+/* プレーヤー */
+.player{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));width:min(640px,calc(100% - 24px));padding:16px 20px 18px;border-radius:40px;z-index:10;opacity:0;pointer-events:none;transform:translate(-50%,28px) scale(.96);transition:opacity .35s,transform .55s var(--spring);-webkit-backdrop-filter:blur(34px) saturate(220%) brightness(1.06);backdrop-filter:blur(34px) saturate(220%) brightness(1.06)}
+.player.show{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+.ptop{display:flex;align-items:center;gap:10px;margin-right:-8px}
+.ptitle{flex:1;min-width:0;font-size:.85rem;font-weight:600;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pprog{font-size:.82rem;color:var(--sub);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sent{min-height:4.5em;max-height:34vh;overflow-y:auto;margin:10px 0 0;font-size:clamp(1.3rem,3.6vw,1.6rem);font-weight:600;line-height:1.45;letter-spacing:-.012em;user-select:none;-webkit-user-select:none}
+.w{display:inline-block;transition:filter .5s,opacity .5s,color .25s}
+.sent[data-m=follow] .w:not(.c){filter:blur(7px);opacity:.5}
+.sent[data-m=hide] .w{filter:blur(9px);opacity:.42}
+.sent:not([data-m=hide]) .w.n{color:var(--accent)}
+.sent.peek .w{filter:none!important;opacity:1!important}
+.bar{display:flex;gap:3px;margin:14px 0 8px}
+.bar.dense{gap:1px}
+.bar button{flex:1;min-width:2px;height:18px;padding:7px 0}
+.bar button::after{content:"";display:block;height:4px;border-radius:2px;background:var(--track);transition:background-color .3s}
+.bar button.done::after{background:var(--faint)}
+.bar button.cur::after{background:var(--accent)}
+.pc{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px}
+.pc .chip:first-child{justify-self:start}
+.pc .chip:last-child{justify-self:end}
+.tp{display:flex;align-items:center;gap:14px}
+.ib.big{width:46px;height:46px;color:var(--text)}
+.ib.big svg{width:24px;height:24px}
+.pp{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;color:#fff;background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 80%,#fff),var(--accent));box-shadow:inset 0 1px 1px rgba(255,255,255,.6),0 8px 22px color-mix(in srgb,var(--accent) 38%,transparent)}
+.pp svg{width:26px;height:26px}
+.chip{height:34px;padding:0 14px;border-radius:999px;background:var(--field);box-shadow:inset 0 1px 1px var(--hi);font-size:.8rem;font-weight:600;white-space:nowrap}
+.toast{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:50%;display:flex;align-items:center;gap:14px;max-width:calc(100% - 32px);padding:11px 20px;border-radius:999px;font-size:.9rem;z-index:20;opacity:0;pointer-events:none;transform:translate(-50%,-14px) scale(.96);transition:opacity .25s,transform .5s var(--spring)}
+.toast.show{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+.toast .lk{font-weight:600;white-space:nowrap}
+@media (max-width:480px){.card{padding:16px}.vrow{grid-template-columns:112px 1fr}.si .seg{width:168px}.player{padding:14px 16px 16px;border-radius:34px}.tp{gap:6px}}
+@media (prefers-reduced-motion:reduce){.bd::before{animation:none}*,*::before,*::after{transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="bd" aria-hidden="true"></div>
+<main>
+  <header class="hero"><h1>Listening</h1></header>
+  <section class="glass card" id="composer">
+    <p id="unsup" class="notice hidden">このブラウザは読み上げに対応していません。Chrome、Edge、Safari の最新版で開いてください。</p>
+    <div class="stack">
+      <textarea id="text" class="field" placeholder="Type or paste English here." aria-label="英文" lang="en" spellcheck="true"></textarea>
+      <div class="count" id="count" aria-live="polite"></div>
+      <div class="vrow">
+        <div class="seg" id="accSeg" role="group" aria-label="アクセント"><span class="thumb"></span><button type="button" data-v="US">US</button><button type="button" data-v="UK">UK</button></div>
+        <select id="voice" class="field" aria-label="声"></select>
+      </div>
+      <p id="vhint" class="hint hidden"></p>
+      <details class="settings">
+        <summary><span>再生設定</span><span class="sv" id="sum"></span></summary>
+        <div class="sbody">
+          <div><div class="sh"><label for="rate">速さ</label><output id="rateV"></output></div><input type="range" id="rate" min="0.5" max="1.5" step="0.05"></div>
+          <div><div class="sh"><label for="pause">文と文の間</label><output id="pauseV"></output></div><input type="range" id="pause" min="0" max="5" step="0.5"></div>
+          <div class="si"><span>1文の繰り返し</span><div class="seg sm" id="repSeg" role="group" aria-label="1文の繰り返し"><span class="thumb"></span><button type="button" data-v="1">1回</button><button type="button" data-v="2">2回</button><button type="button" data-v="3">3回</button><button type="button" data-v="5">5回</button></div></div>
+          <label class="si"><span>最後まで再生したら最初から</span><span class="sw"><input type="checkbox" id="loop"><i></i></span></label>
+        </div>
+      </details>
+      <div class="actions">
+        <button id="cancel" class="lk hidden" type="button">編集をやめる</button>
+        <button id="btnPre" class="btn" type="button">試聴</button>
+        <button id="save" class="btn pri" type="button">保存</button>
+      </div>
+    </div>
+  </section>
+  <section aria-label="保存した英文"><div id="list" class="library"></div></section>
+</main>
+
+<div id="player" class="player glass" role="region" aria-label="プレーヤー" aria-hidden="true">
+  <div class="ptop"><div class="ptitle" id="pTitle"></div><div class="pprog" id="pProg"></div><button id="pClose" class="ib" type="button" aria-label="閉じる"></button></div>
+  <div class="sent" id="sent" data-m="follow" lang="en"></div>
+  <div class="bar" id="bar"></div>
+  <div class="pc">
+    <button id="pRate" class="chip" type="button" aria-label="速さを変更"></button>
+    <div class="tp"><button id="pPrev" class="ib big" type="button" aria-label="前の文"></button><button id="pPlay" class="pp" type="button" aria-label="再生"></button><button id="pNext" class="ib big" type="button" aria-label="次の文"></button></div>
+    <button id="pMode" class="chip" type="button" aria-label="英文の表示方法を変更"></button>
+  </div>
+</div>
+<div id="toast" class="toast glass" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+const KI = 'listeningMaker.items.v1', KP = 'listeningMaker.prefs.v1';
+const $ = (id) => document.getElementById(id);
+const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
+const svg = (d, f) => `<svg viewBox="0 0 24 24" ${f ? 'fill="currentColor"' : 'fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"'}>${d}</svg>`;
+const IC = {
+  play: svg('<path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/>', 1),
+  pause: svg('<rect x="6.5" y="5" width="4" height="14" rx="1.2"/><rect x="13.5" y="5" width="4" height="14" rx="1.2"/>', 1),
+  prev: svg('<rect x="5" y="5" width="2.4" height="14" rx="1"/><path d="M19 6.2v11.6a.9.9 0 0 1-1.38.76L9.3 13.3a1.5 1.5 0 0 1 0-2.6l8.32-5.26A.9.9 0 0 1 19 6.2z"/>', 1),
+  next: svg('<rect x="16.6" y="5" width="2.4" height="14" rx="1"/><path d="M5 6.2v11.6a.9.9 0 0 0 1.38.76l8.32-5.26a1.5 1.5 0 0 0 0-2.6L6.38 5.44A.9.9 0 0 0 5 6.2z"/>', 1),
+  close: svg('<path d="M7 7l10 10M17 7L7 17"/>'),
+  edit: svg('<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/>'),
+  trash: svg('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/>')
+};
+const RATES = [.6, .7, .8, .9, 1, 1.1, 1.2, 1.3];
+const MODES = ['follow', 'all', 'hide'];
+const MODE = { follow: '声に合わせる', all: '常に表示', hide: '隠す' };
+const WD = '日月火水木金土';
+const ABBR = /\b(?:Mr|Mrs|Ms|Dr|Prof|Sr|Jr|St|vs|e\.g|i\.e)\.$/i;
+// 効果音・合成風・子どもの声・古い合成音声は一覧に出さない
+const NOVELTY = /^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Deranged|Good News|Hysterical|Jester|Organ|Pipe Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Fred|Junior|Kathy|Ralph|Princess|Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley|Ana|Maisie|Agnes|Bruce|Vicki|Victoria)\b/i;
+const FEM = ' aria jenny michelle emma ava samantha allison susan zoe nicky joelle zira sonia libby kate serena stephanie martha hazel ';
+const MAL = ' guy christopher eric roger steffan andrew brian tom alex aaron evan nathan david mark ryan thomas daniel arthur oliver george ';
+
+// ---------- 保存 ----------
+const load = (k, f) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? f : v; } catch (e) { return f; } };
+const prefs = Object.assign({ accent: 'US', voice: {}, rate: 1, pause: 1, repeat: 1, loop: false, display: 'follow' }, load(KP, {}));
+prefs.voice = Object.assign({ US: '', UK: '' }, prefs.voice);
+if (!MODES.includes(prefs.display)) prefs.display = 'follow';
+const savePrefs = () => { try { localStorage.setItem(KP, JSON.stringify(prefs)); } catch (e) {} };
+const clamp = (v, a, b, d) => { v = Number(v); return Number.isFinite(v) ? Math.min(b, Math.max(a, v)) : d; };
+function norm(i) {
+  const s = i.settings || {}, c = Number(i.createdAt) || Date.now();
+  return {
+    id: String(i.id), text: String(i.text),
+    settings: { accent: s.accent === 'UK' ? 'UK' : 'US', voiceURI: s.voiceURI || '', voiceName: s.voiceName || '', rate: clamp(s.rate, .5, 1.5, 1), pause: clamp(s.pause, 0, 5, 1), repeat: [1, 2, 3, 5].includes(Number(s.repeat)) ? Number(s.repeat) : 1, loop: !!s.loop },
+    createdAt: c, updatedAt: Number(i.updatedAt) || c, lastPlayedAt: Number(i.lastPlayedAt) || null, playCount: Number(i.playCount) || 0,
+    playLog: Array.isArray(i.playLog) ? i.playLog : []
+  };
+}
+let items = (() => { const r = load(KI, []); return Array.isArray(r) ? r.filter((i) => i && i.id && i.text).map(norm) : []; })();
+const saveItems = () => { try { localStorage.setItem(KI, JSON.stringify(items)); return true; } catch (e) { toast('保存できませんでした'); return false; } };
+
+// ---------- ユーティリティ ----------
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const fmt = (r) => Number(r).toFixed(2).replace(/0$/, '');
+const sod = (t) => { const d = new Date(t); return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); };
+const dago = (t) => Math.round((sod(Date.now()) - sod(t)) / 864e5);
+function sentences(t) {
+  const c = String(t).replace(/\s+/g, ' ').trim();
+  if (!c) return [];
+  const out = [];
+  c.split(/(?<=[.!?]["'”’)\]]*)\s+/).forEach((p) => {
+    if (out.length && ABBR.test(out[out.length - 1])) out[out.length - 1] += ' ' + p; else out.push(p);
+  });
+  return out.filter(Boolean);
+}
+function heading(t) {
+  const d = new Date(t), md = `${d.getMonth() + 1}月${d.getDate()}日（${WD[d.getDay()]}）`, df = dago(t);
+  return { date: d.getFullYear() === new Date().getFullYear() ? md : `${d.getFullYear()}年${md}`, rel: df === 0 ? '今日' : df === 1 ? '昨日' : df > 1 && df < 7 ? `${df}日前` : '' };
+}
+let tt;
+function toast(msg, act, ms) {
+  const t = $('toast');
+  t.innerHTML = '';
+  const s = document.createElement('span');
+  s.textContent = msg;
+  t.appendChild(s);
+  if (act) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'lk'; b.textContent = act.label;
+    b.onclick = () => { t.classList.remove('show'); act.fn(); };
+    t.appendChild(b);
+  }
+  t.classList.add('show');
+  clearTimeout(tt);
+  tt = setTimeout(() => t.classList.remove('show'), ms || 2400);
+}
+function seg(el, val, cb) {
+  const bs = [...el.querySelectorAll('button')];
+  el.style.setProperty('--n', bs.length);
+  const set = (v, emit) => {
+    const i = Math.max(0, bs.findIndex((b) => b.dataset.v === String(v)));
+    el.style.setProperty('--i', i);
+    bs.forEach((b, j) => b.setAttribute('aria-pressed', String(j === i)));
+    if (emit) cb(bs[i].dataset.v);
+  };
+  bs.forEach((b) => b.addEventListener('click', () => set(b.dataset.v, 1)));
+  set(val, 0);
+  return { set: (v) => set(v, 0) };
+}
+
+// ---------- 声の選別（高音質だけを残す） ----------
+let vox = { US: [], UK: [] }, bestTier = { US: 0, UK: 0 };
+const failed = new Set();
+const accOf = (v) => { const l = (v.lang || '').replace('_', '-').toLowerCase(); return l.startsWith('en-us') ? 'US' : l.startsWith('en-gb') ? 'UK' : null; };
+const baseOf = (v) => v.name.replace(/^Microsoft\s+/i, '').replace(/\s+Online\b.*$/i, '').replace(/\s*-\s*English.*$/i, '').replace(/\s*\((Enhanced|Premium|Natural)\)/gi, '').replace(/\s*\(English.*\)\s*$/i, '').replace(/\s+Desktop$/i, '').replace(/Multilingual$/i, '').trim();
+// 0:除外 1:旧式 2:標準 3:高音質（Premium / Enhanced / Natural / Neural）
+function tierOf(v) {
+  const id = `${v.name} ${v.voiceURI || ''}`;
+  if (NOVELTY.test(baseOf(v)) || /eloquence/i.test(id)) return 0;
+  if (/natural|neural|premium|enhanced|siri/i.test(id)) return 3;
+  if (/^Microsoft/i.test(v.name)) return /online/i.test(v.name) ? 3 : 1;
+  return 2;
+}
+const scoreOf = (v) => { const id = `${v.name} ${v.voiceURI || ''}`; return /premium|natural|neural/i.test(id) ? 3 : /enhanced|siri/i.test(id) ? 2 : /^Google/i.test(v.name) ? 1 : 0; };
+const genderOf = (b) => { const k = ` ${b.toLowerCase()} `; return /female/i.test(b) || FEM.includes(k) ? '女性' : /male/i.test(b) || MAL.includes(k) ? '男性' : ''; };
+const gOrd = (g) => g === '女性' ? 0 : g === '男性' ? 1 : 2;
+function loadVoices() {
+  if (!synth) return;
+  const g = { US: [], UK: [] };
+  synth.getVoices().forEach((v) => {
+    const a = accOf(v);
+    if (!a || failed.has(v.voiceURI)) return;
+    const t = tierOf(v);
+    if (t) g[a].push({ v, t, s: scoreOf(v), b: baseOf(v) });
+  });
+  ['US', 'UK'].forEach((k) => {
+    const all = g[k], ok = all.filter((e) => e.t >= 2), top = ok.filter((e) => e.t === 3);
+    const base = top.length >= 2 ? top : ok;           // 高音質が2つ以上あれば、それだけを表示
+    const loc = base.filter((e) => e.v.localService);   // 端末内の声は話し始めが速い
+    const pool = loc.length ? loc : base.length ? base : all;
+    const m = new Map();
+    pool.forEach((e) => { const key = e.b.toLowerCase(), c = m.get(key); if (!c || e.t * 10 + e.s > c.t * 10 + c.s) m.set(key, e); });
+    const list = [...m.values()].map((e) => ({ ...e, g: genderOf(e.b) }));
+    list.sort((a, b) => b.t - a.t || gOrd(a.g) - gOrd(b.g) || b.s - a.s || a.b.localeCompare(b.b));
+    const cnt = {}, n = {};
+    list.forEach((e) => { e.l = (e.g || '声') + (e.t === 3 ? ' · 高音質' : ''); cnt[e.l] = (cnt[e.l] || 0) + 1; });
+    list.forEach((e) => { if (cnt[e.l] > 1) { n[e.l] = (n[e.l] || 0) + 1; e.l += ` ${n[e.l]}`; } });
+    vox[k] = list;
+    bestTier[k] = list.length ? Math.max(...list.map((e) => e.t)) : 0;
+  });
+  renderVoice();
+  if (P.st !== 'idle') updTitle();
+}
+function waitVoices() {
+  if (!synth || vox.US.length || vox.UK.length) return Promise.resolve();
+  if (synth.getVoices().length) { loadVoices(); return Promise.resolve(); }
+  return new Promise((res) => {
+    let d = 0;
+    const f = () => { if (d) return; d = 1; clearTimeout(t); synth.removeEventListener('voiceschanged', f); loadVoices(); res(); };
+    const t = setTimeout(f, 800);
+    synth.addEventListener('voiceschanged', f);
+  });
+}
+function hint() {
+  const u = navigator.userAgent;
+  if (/iPhone|iPad|iPod/.test(u)) return 'さらに高音質にするには「設定 → アクセシビリティ → 読み上げコンテンツ → 声 → 英語」で「拡張」または「プレミアム」の声を追加し、再読み込みしてください。';
+  if (/Macintosh/.test(u)) return 'さらに高音質にするには「システム設定 → アクセシビリティ → 読み上げコンテンツ → システムの声 → 声を管理」で高音質の声を追加してください。';
+  return 'Microsoft Edge で開くと、高音質の声（Natural）を使えます。';
+}
+function renderVoice() {
+  const sel = $('voice'), list = vox[fAcc], want = fVoice[fAcc];
+  sel.innerHTML = '';
+  if (!list.length) { sel.add(new Option('標準の声', '')); sel.disabled = true; }
+  else {
+    sel.disabled = false;
+    list.forEach((e) => sel.add(new Option(e.l, e.v.voiceURI)));
+    sel.value = list.some((e) => e.v.voiceURI === want) ? want : list[0].v.voiceURI;
+  }
+  const low = synth && synth.getVoices().length && bestTier[fAcc] < 3, h = $('vhint');
+  h.textContent = low ? hint() : '';
+  h.classList.toggle('hidden', !low);
+}
+const findVoice = (s) => { const l = vox[s.accent] || []; return l.find((e) => e.v.voiceURI === s.voiceURI) || l.find((e) => e.v.name === s.voiceName) || l[0] || null; };
+const langOf = (a) => a === 'UK' ? 'en-GB' : 'en-US';
+
+// 保存した英文の声を先に準備しておき、再生ボタンを押した瞬間に話し始められるようにする
+const warmed = new Set();
+let gest = false;
+function warm(e) {
+  if (!synth || !e || P.st === 'playing') return;
+  const u = new SpeechSynthesisUtterance('a');
+  u.volume = 0; u.voice = e.v; u.lang = (e.v.lang || '').replace('_', '-');
+  synth.speak(u);
+}
+function warmAll() {
+  if (!synth || !gest || P.st === 'playing') return;
+  const seen = [], add = (e) => { if (e && !warmed.has(e.v.voiceURI) && !seen.includes(e) && seen.length < 3) seen.push(e); };
+  add(findVoice(formSet()));
+  [...items].sort((a, b) => (b.lastPlayedAt || b.createdAt) - (a.lastPlayedAt || a.createdAt)).forEach((i) => add(findVoice(i.settings)));
+  seen.forEach((e) => { warmed.add(e.v.voiceURI); warm(e); });
+}
+
+// ---------- フォーム ----------
+let fAcc = prefs.accent, fRep = prefs.repeat, fVoice = { ...prefs.voice }, editId = null, accSeg, repSeg;
+function formSet() {
+  const e = vox[fAcc].find((x) => x.v.voiceURI === $('voice').value);
+  return { accent: fAcc, voiceURI: e ? e.v.voiceURI : '', voiceName: e ? e.v.name : '', rate: Number($('rate').value), pause: Number($('pause').value), repeat: Number(fRep), loop: $('loop').checked };
+}
+function setForm(s) {
+  fAcc = s.accent; fRep = s.repeat;
+  accSeg.set(s.accent); repSeg.set(s.repeat);
+  $('rate').value = s.rate; $('pause').value = s.pause; $('loop').checked = !!s.loop;
+  renderVoice(); labels();
+}
+const fill = (el) => el.style.setProperty('--p', (el.value - el.min) / (el.max - el.min) * 100 + '%');
+function labels() {
+  const r = Number($('rate').value), p = Number($('pause').value), t = $('text').value, e = !t.trim();
+  $('rateV').textContent = fmt(r) + 'x'; $('pauseV').textContent = p + '秒';
+  fill($('rate')); fill($('pause'));
+  $('sum').textContent = `${fmt(r)}x · ${p}秒 · ${fRep}回${$('loop').checked ? ' · ループ' : ''}`;
+  $('count').textContent = e ? '' : `${sentences(t).length}文 · ${t.trim().split(/\s+/).length}語`;
+  $('save').disabled = e; $('btnPre').disabled = e || !synth;
+}
+function onForm() {
+  labels();
+  if (editId) return;
+  const s = formSet();
+  Object.assign(prefs, { accent: s.accent, rate: s.rate, pause: s.pause, repeat: s.repeat, loop: s.loop });
+  prefs.voice = { ...prefs.voice, ...fVoice };
+  savePrefs();
+}
+function resetForm() {
+  editId = null; $('text').value = ''; $('save').textContent = '保存'; $('cancel').classList.add('hidden');
+  fVoice = { ...prefs.voice };
+  setForm({ accent: prefs.accent, rate: prefs.rate, pause: prefs.pause, repeat: prefs.repeat, loop: prefs.loop });
+  renderList();
+}
+function startEdit(i) {
+  editId = i.id; $('text').value = i.text;
+  fVoice = { ...prefs.voice, [i.settings.accent]: i.settings.voiceURI };
+  setForm(i.settings);
+  $('save').textContent = '更新'; $('cancel').classList.remove('hidden');
+  renderList();
+  $('composer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function saveCur() {
+  const text = $('text').value.trim();
+  if (!text) return;
+  const s = formSet(), now = Date.now();
+  if (editId) {
+    const it = items.find((i) => i.id === editId);
+    if (it) Object.assign(it, { text, settings: s, updatedAt: now });
+    if (saveItems()) toast('更新しました');
+  } else {
+    items.push(norm({ id: uid(), text, settings: s, createdAt: now, updatedAt: now }));
+    if (saveItems()) toast('保存しました');
+  }
+  warm(findVoice(s));
+  resetForm();
+}
+
+// ---------- ライブラリ ----------
+function itemHtml(i) {
+  const cur = P.id === i.id && P.st !== 'idle', pl = cur && P.st === 'playing', ss = sentences(i.text), rest = ss.slice(1).join(' ');
+  const t = new Date(i.createdAt), meta = `${t.getHours()}:${String(t.getMinutes()).padStart(2, '0')} 保存 · ${i.playCount ? i.playCount + '回再生' : '未再生'}`;
+  return `<div class="item${cur ? ' playing' : ''}${editId === i.id ? ' editing' : ''}"><button class="ip" type="button" data-a="play" data-id="${i.id}" aria-label="${pl ? '一時停止' : '再生'}">${pl ? IC.pause : IC.play}</button><div class="body"><div class="ih"><span class="it" lang="en">${esc(ss[0] || i.text)}</span><span class="tag">${i.settings.accent}</span></div>${rest ? `<div class="isn" lang="en">${esc(rest)}</div>` : ''}<div class="im">${meta}</div></div><div class="ia"><button class="ib" type="button" data-a="edit" data-id="${i.id}" aria-label="編集">${IC.edit}</button><button class="ib dg" type="button" data-a="del" data-id="${i.id}" aria-label="削除">${IC.trash}</button></div></div>`;
+}
+function renderList() {
+  const f = [...items].sort((a, b) => b.createdAt - a.createdAt), L = $('list');
+  if (!f.length) { L.innerHTML = '<div class="glass list"><div class="empty">保存した英文は、保存した日ごとにここに並びます</div></div>'; return; }
+  const gs = [];
+  f.forEach((i) => { const k = sod(i.createdAt), l = gs[gs.length - 1]; if (l && l.k === k) l.i.push(i); else gs.push({ k, i: [i] }); });
+  L.innerHTML = gs.map((g) => { const h = heading(g.k); return `<div><div class="gh"><span class="gd">${h.date}</span>${h.rel ? `<span class="gr">${h.rel}</span>` : ''}<span class="gc">${g.i.length}件</span></div><div class="glass list">${g.i.map(itemHtml).join('')}</div></div>`; }).join('');
+}
+let lastDel = null;
+function del(id) {
+  const x = items.findIndex((i) => i.id === id);
+  if (x < 0) return;
+  const [r] = items.splice(x, 1);
+  if (P.id === id) stop();
+  if (editId === id) resetForm();
+  saveItems(); renderList();
+  lastDel = { r, x };
+  const h = sentences(r.text)[0] || r.text;
+  toast(`「${h.length > 16 ? h.slice(0, 16) + '…' : h}」を削除しました`, { label: '取り消す', fn: () => { if (!lastDel) return; items.splice(Math.min(lastDel.x, items.length), 0, lastDel.r); lastDel = null; saveItems(); renderList(); toast('元に戻しました'); } }, 6000);
+}
+
+// ---------- 再生エンジン ----------
+const P = { sents: [], plan: [], step: 0, set: null, id: null, st: 'idle', token: 0, timer: null, est: null, got: false, gap: false, words: [], rend: -1, max: -1, now: -1 };
+const lat = { avg: 0, n: 0 };
+const recLat = (ms) => { const v = Math.min(1500, Math.max(0, ms)); lat.avg = lat.n ? lat.avg * .6 + v * .4 : v; lat.n++; };
+const curS = () => P.plan.length ? P.plan[Math.min(P.step, P.plan.length - 1)].s : 0;
+// 長さを変えない置き換えだけを行う（単語の強調位置がずれないように）
+const spk = (t) => t.replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/[—–]/g, ',').replace(/…/g, '.').replace(/[*_#~|^`<>]/g, ' ');
+
+function playItem(it) {
+  if (P.id === it.id && P.st !== 'idle') { toggle(); return; }
+  it.playCount++; it.lastPlayedAt = Date.now(); saveItems();
+  begin(it.text, { ...it.settings }, it.id);
+}
+function begin(text, set, id) {
+  if (!synth) { toast('このブラウザは読み上げに対応していません'); return; }
+  const ss = sentences(text);
+  if (!ss.length) return;
+  const plan = [];
+  ss.forEach((_, s) => { for (let r = 0; r < set.repeat; r++) plan.push({ s, r }); });
+  Object.assign(P, { sents: ss, plan, step: 0, set, id, rend: -1 });
+  updTitle();
+  $('bar').classList.toggle('dense', ss.length > 40);
+  $('bar').innerHTML = ss.map((_, i) => `<button type="button" data-i="${i}" aria-label="${i + 1}文目"></button>`).join('');
+  showPlayer(true); playFrom(0); renderList();
+}
+function updTitle() {
+  if (!P.set) return;
+  const e = findVoice(P.set);
+  $('pTitle').textContent = e ? `${P.set.accent} · ${e.l}` : P.set.accent;
+}
+const stopEst = () => { clearTimeout(P.est); P.est = null; };
+const clearT = () => { clearTimeout(P.timer); stopEst(); };
+function interrupt() {
+  P.token++; clearT();
+  if (synth && (synth.speaking || synth.pending)) { synth.cancel(); P.gap = true; }
+}
+function playFrom(s) { interrupt(); send(s); }
+function send(step) {
+  const token = P.token;
+  clearT();
+  if (step >= P.plan.length) { if (P.set.loop) step = 0; else { finish(); return; } }
+  P.step = step; P.st = 'playing';
+  const si = P.plan[step].s;
+  if (P.rend !== si) renderSent(si);
+  clearNow(); updUI();
+  waitVoices().then(() => { if (token !== P.token || P.st !== 'playing') return; speak(token, mkU(token, step)); });
+}
+function speak(token, u) {
+  const go = () => { if (token !== P.token) return; u._q = performance.now(); synth.speak(u); };
+  // Chrome は cancel() の直後の speak() を無視することがあるため、そのときだけ少し待つ
+  if (P.gap || synth.speaking || synth.pending) { P.gap = false; synth.cancel(); setTimeout(go, 40); } else go();
+}
+// 文と文の間が0秒のときは、次の文を先に待ち行列へ入れて途切れなくつなぐ
+function prequeue(token, step, cur) {
+  let n = step + 1;
+  if (n >= P.plan.length) { if (!P.set.loop) return; n = 0; }
+  const nu = mkU(token, n);
+  nu._pre = 1; cur._next = 1;
+  synth.speak(nu);
+}
+function mkU(token, step) {
+  const si = P.plan[step].s, text = P.sents[si], u = new SpeechSynthesisUtterance(spk(text)), e = findVoice(P.set);
+  if (e) { u.voice = e.v; u.lang = (e.v.lang || '').replace('_', '-') || langOf(P.set.accent); } else u.lang = langOf(P.set.accent);
+  u.rate = P.set.rate;
+  u.onstart = () => {
+    if (token !== P.token) return;
+    if (u._q && !u._pre) recLat(performance.now() - u._q);
+    P.step = step;
+    if (P.rend !== si) renderSent(si);
+    clearNow(); P.got = false; updUI();
+    startEst(token, step, text.length, u.rate);
+    if (P.set.pause === 0) prequeue(token, step, u);
+  };
+  u.onboundary = (ev) => {
+    if (token !== P.token || P.step !== step) return;
+    if (ev.name && ev.name !== 'word') return;
+    P.got = true; stopEst(); reveal(ev.charIndex);
+  };
+  u.onend = () => {
+    if (token !== P.token || P.st !== 'playing') return;
+    stopEst(); revealAll();
+    if (u._next) return;
+    const n = step + 1;
+    if (n >= P.plan.length && !P.set.loop) { finish(); return; }
+    P.timer = setTimeout(() => { if (token === P.token && P.st === 'playing') send(n); }, Math.max(0, P.set.pause * 1000 - lat.avg));
+  };
+  u.onerror = (ev) => {
+    if (token !== P.token || ev.error === 'interrupted' || ev.error === 'canceled') return;
+    stopEst();
+    if (e && ['synthesis-failed', 'synthesis-unavailable', 'network', 'voice-unavailable', 'language-unavailable'].includes(ev.error)) {
+      failed.add(e.v.voiceURI); loadVoices();
+      if (findVoice(P.set)) { toast('選んだ声を使えなかったため、別の声で再生しています', null, 3200); updTitle(); playFrom(step); return; }
+    }
+    P.st = 'paused'; updUI(); renderList(); toast(`読み上げに失敗しました（${ev.error}）`);
+  };
+  return u;
+}
+function startEst(token, step, len, rate) {
+  stopEst();
+  const cps = 14 * rate, t0 = performance.now();
+  P.est = setTimeout(function tick() {
+    if (token !== P.token || P.step !== step || P.got) return;
+    reveal(Math.min(Math.floor((performance.now() - t0) / 1000 * cps), len));
+    P.est = setTimeout(tick, 80);
+  }, 350);
+}
+function renderSent(si) {
+  const s = P.sents[si], el = $('sent');
+  let h = '', l = 0;
+  s.replace(/\S+/g, (m, o) => { h += esc(s.slice(l, o)) + `<span class="w" data-s="${o}">${esc(m)}</span>`; l = o + m.length; return m; });
+  h += esc(s.slice(l));
+  el.innerHTML = h; el.scrollTop = 0;
+  P.words = [...el.querySelectorAll('.w')].map((w) => ({ el: w, s: Number(w.dataset.s) }));
+  P.rend = si; P.max = -1; P.now = -1;
+}
+function reveal(ci) {
+  const w = P.words;
+  let k = -1;
+  for (let i = 0; i < w.length; i++) { if (w[i].s <= ci) k = i; else break; }
+  if (k < 0) return;
+  for (let i = P.max + 1; i <= k; i++) w[i].el.classList.add('c');
+  P.max = Math.max(P.max, k);
+  if (k !== P.now) {
+    if (P.now >= 0 && w[P.now]) w[P.now].el.classList.remove('n');
+    w[k].el.classList.add('n'); P.now = k;
+  }
+}
+function clearNow() { if (P.now >= 0 && P.words[P.now]) P.words[P.now].el.classList.remove('n'); P.now = -1; }
+function revealAll() { P.words.forEach((w) => w.el.classList.add('c')); P.max = P.words.length - 1; clearNow(); }
+function finish() { clearT(); P.st = 'done'; P.step = P.plan.length - 1; revealAll(); updUI(); renderList(); }
+function toggle() {
+  if (P.st === 'playing') { P.st = 'paused'; interrupt(); clearNow(); }
+  else if (P.st === 'paused') playFrom(P.step);
+  else if (P.st === 'done') { P.rend = -1; playFrom(0); }
+  updUI(); renderList();
+}
+function jump(i) {
+  if (!P.sents.length) return;
+  const w = P.st === 'playing', s = Math.max(0, Math.min(i, P.sents.length - 1));
+  playFrom(s * P.set.repeat);
+  if (!w) renderList();
+}
+function stop() { interrupt(); P.st = 'idle'; P.id = null; showPlayer(false); renderList(); }
+function showPlayer(on) {
+  const p = $('player');
+  p.classList.toggle('show', on); p.setAttribute('aria-hidden', String(!on));
+  document.body.classList.toggle('hp', on);
+  $('sent').dataset.m = prefs.display;
+}
+function updUI() {
+  const n = P.sents.length;
+  if (!n) return;
+  const idx = curS(), r = P.plan[Math.min(P.step, P.plan.length - 1)].r, done = P.st === 'done';
+  [...$('bar').children].forEach((b, i) => { b.classList.toggle('done', done || i < idx); b.classList.toggle('cur', !done && i === idx); });
+  $('pProg').textContent = `${idx + 1} / ${n}` + (P.set.repeat > 1 && !done ? ` · ${r + 1}/${P.set.repeat}回目` : '');
+  const pb = $('pPlay'), pl = P.st === 'playing';
+  pb.innerHTML = pl ? IC.pause : IC.play; pb.setAttribute('aria-label', pl ? '一時停止' : '再生');
+  $('pPrev').disabled = idx === 0 && !done; $('pNext').disabled = idx >= n - 1;
+  $('pRate').textContent = fmt(P.set.rate) + 'x'; $('pMode').textContent = MODE[prefs.display];
+}
+function cycleRate() {
+  const next = RATES.find((r) => r > P.set.rate + .001) ?? RATES[0];
+  P.set.rate = next;
+  if (P.id) { const it = items.find((i) => i.id === P.id); if (it) { it.settings.rate = next; saveItems(); } }
+  else { $('rate').value = next; onForm(); }
+  if (P.st === 'playing') jump(curS()); else updUI();
+}
+function cycleMode() {
+  prefs.display = MODES[(MODES.indexOf(prefs.display) + 1) % MODES.length];
+  savePrefs(); $('sent').dataset.m = prefs.display; updUI();
+}
+
+// ---------- 初期化 ----------
+function init() {
+  $('pClose').innerHTML = IC.close; $('pPrev').innerHTML = IC.prev; $('pNext').innerHTML = IC.next;
+  accSeg = seg($('accSeg'), fAcc, (v) => { fAcc = v; renderVoice(); onForm(); warm(findVoice(formSet())); });
+  repSeg = seg($('repSeg'), fRep, (v) => { fRep = Number(v); onForm(); });
+  setForm({ accent: prefs.accent, rate: prefs.rate, pause: prefs.pause, repeat: prefs.repeat, loop: prefs.loop });
+  if (!synth) $('unsup').classList.remove('hidden');
+  else {
+    loadVoices();
+    synth.addEventListener('voiceschanged', () => { loadVoices(); warmAll(); });
+    document.addEventListener('pointerdown', () => { gest = true; warmAll(); }, { once: true, capture: true });
+  }
+  $('voice').addEventListener('change', (e) => { fVoice[fAcc] = e.target.value; onForm(); warm(findVoice(formSet())); });
+  ['rate', 'pause'].forEach((id) => $(id).addEventListener('input', onForm));
+  $('loop').addEventListener('change', onForm);
+  $('text').addEventListener('input', labels);
+  $('btnPre').addEventListener('click', () => begin($('text').value, formSet(), null));
+  $('save').addEventListener('click', saveCur);
+  $('cancel').addEventListener('click', resetForm);
+  $('list').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-a]');
+    if (!b) return;
+    const it = items.find((i) => i.id === b.dataset.id);
+    if (!it) return;
+    if (b.dataset.a === 'play') playItem(it); else if (b.dataset.a === 'edit') startEdit(it); else del(it.id);
+  });
+  $('pPlay').addEventListener('click', toggle);
+  $('pPrev').addEventListener('click', () => jump(P.st === 'done' ? P.sents.length - 1 : curS() - 1));
+  $('pNext').addEventListener('click', () => jump(curS() + 1));
+  $('pClose').addEventListener('click', stop);
+  $('pRate').addEventListener('click', cycleRate);
+  $('pMode').addEventListener('click', cycleMode);
+  $('bar').addEventListener('click', (e) => { const b = e.target.closest('button[data-i]'); if (b) jump(Number(b.dataset.i)); });
+  const se = $('sent');
+  se.addEventListener('pointerdown', () => se.classList.add('peek'));
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach((t) => se.addEventListener(t, () => se.classList.remove('peek')));
+  document.addEventListener('keydown', (e) => {
+    if (!$('player').classList.contains('show')) return;
+    const t = e.target;
+    if (t.closest && t.closest('input,textarea,select')) return;
+    if (e.code === 'Space' && !(t.closest && t.closest('button'))) { e.preventDefault(); toggle(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); jump(curS() - 1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); jump(curS() + 1); }
+    else if (e.key === 'Escape') stop();
+  });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { warmed.clear(); warmAll(); renderList(); } });
+  window.addEventListener('beforeunload', () => { if (synth) synth.cancel(); });
+  renderList();
+}
+init();
+})();
+</script>
+</body>
+</html>
