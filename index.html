@@ -118,7 +118,6 @@
     inset: 0;
     z-index: -1;
     background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg) 60%);
-    transition: background 0.4s var(--ease);
   }
 
   button {
@@ -221,12 +220,6 @@
     font-size: 0.9rem;
   }
 
-  .hint {
-    margin: -2px 4px 0;
-    font-size: 0.8rem;
-    color: var(--sub);
-  }
-
   /* ---------- 入力 ---------- */
   .field {
     width: 100%;
@@ -298,6 +291,10 @@
     to { opacity: 0; transform: scale(1.5); }
   }
 
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
   .countline {
     min-height: 1.3em;
     margin: -2px 4px 0;
@@ -310,7 +307,7 @@
 
   .voice-row {
     display: grid;
-    grid-template-columns: 128px 1fr;
+    grid-template-columns: 120px 1fr 40px;
     gap: 10px;
     align-items: center;
   }
@@ -327,8 +324,6 @@
     cursor: pointer;
   }
 
-  .select-wrap select:disabled { cursor: default; color: var(--sub); }
-
   .select-wrap svg {
     position: absolute;
     right: 12px;
@@ -338,6 +333,32 @@
     transform: translateY(-50%) rotate(90deg);
     color: var(--sub);
     pointer-events: none;
+  }
+
+  .sample-btn {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--field);
+    border: 1px solid var(--hairline);
+    color: var(--text);
+  }
+
+  .sample-btn svg { width: 19px; height: 19px; }
+
+  .sample-btn.busy { color: var(--faint); }
+
+  .sample-btn.busy::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: var(--accent);
+    animation: spin 0.9s linear infinite;
   }
 
   /* ---------- セグメント ---------- */
@@ -533,6 +554,35 @@
 
   .switch input:checked + span::after { transform: translateX(20px); }
 
+  /* ---------- 音声エンジンの状態 ---------- */
+  .engine {
+    display: grid;
+    gap: 6px;
+    margin: 0 4px;
+    font-size: 0.8rem;
+    color: var(--sub);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .engine.error { color: var(--danger); }
+
+  .engine-bar {
+    height: 3px;
+    border-radius: 2px;
+    background: var(--track);
+    overflow: hidden;
+  }
+
+  .engine-bar i {
+    display: block;
+    height: 100%;
+    width: calc(var(--p, 0) * 100%);
+    background: var(--accent);
+    transition: width 0.3s var(--ease);
+  }
+
+  .engine.no-bar .engine-bar { display: none; }
+
   /* ---------- ボタン ---------- */
   .actions {
     display: flex;
@@ -624,6 +674,7 @@
   .item.editing { background: var(--accent-soft); }
 
   .item-play {
+    position: relative;
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -639,6 +690,28 @@
   .item.playing .item-play {
     background: var(--accent);
     color: #fff;
+  }
+
+  .item-play.gen {
+    background: transparent;
+    color: var(--faint);
+    cursor: default;
+  }
+
+  .item-play.gen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent) calc(var(--pg, 0) * 1turn), var(--track) 0);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px));
+    transition: background 0.3s;
+  }
+
+  .item-play.failed {
+    background: var(--danger-soft);
+    color: var(--danger);
   }
 
   .item-body { min-width: 0; }
@@ -684,6 +757,10 @@
     color: var(--faint);
     font-variant-numeric: tabular-nums;
   }
+
+  .item-meta .st-gen { color: var(--accent); }
+
+  .item-meta .st-fail { color: var(--danger); }
 
   .item-actions {
     display: flex;
@@ -859,7 +936,6 @@
   .p-transport .icon-btn svg { width: 24px; height: 24px; }
 
   .play-btn {
-    position: relative;
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -871,20 +947,6 @@
   }
 
   .play-btn svg { width: 26px; height: 26px; }
-
-  .play-btn.pending::after {
-    content: "";
-    position: absolute;
-    inset: -5px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    border-top-color: var(--accent);
-    animation: spin 0.9s linear infinite;
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
 
   .chip {
     height: 32px;
@@ -932,7 +994,7 @@
 
   @media (max-width: 480px) {
     .card { padding: 16px; }
-    .voice-row { grid-template-columns: 112px 1fr; }
+    .voice-row { grid-template-columns: 104px 1fr 40px; }
     .setting-inline .segmented { width: 168px; }
     .player { padding: 14px 16px 16px; border-radius: 28px; }
     .p-transport { gap: 8px; }
@@ -957,7 +1019,7 @@
   </header>
 
   <section class="glass card" id="composer">
-    <p id="unsupported" class="notice hidden">このブラウザは読み上げに対応していません。Chrome、Edge、Safari の最新版で開いてください。</p>
+    <p id="notice" class="notice hidden"></p>
 
     <div class="stack">
       <div class="textwrap" id="textwrap">
@@ -976,8 +1038,8 @@
           <select id="voice" class="field" aria-label="声"></select>
           <span id="selectChevron"></span>
         </div>
+        <button id="btnSample" class="sample-btn" type="button" aria-label="この声を試聴"></button>
       </div>
-      <p id="voiceHint" class="hint hidden"></p>
 
       <details class="settings" id="settings">
         <summary>
@@ -1017,9 +1079,13 @@
         </div>
       </details>
 
+      <div id="engine" class="engine hidden" aria-live="polite">
+        <span id="engineText"></span>
+        <span class="engine-bar"><i id="engineBar"></i></span>
+      </div>
+
       <div class="actions">
         <button id="btnCancelEdit" class="link hidden" type="button">編集をやめる</button>
-        <button id="btnPreview" class="btn" type="button">試聴</button>
         <button id="btnSave" class="btn primary" type="button">保存</button>
       </div>
     </div>
@@ -1053,14 +1119,110 @@
 <div id="toast" class="toast glass" role="status" aria-live="polite"></div>
 
 <script>
+// 音声合成エンジン（Kokoro）。Web Worker 内で動かし、使えない環境では画面側で動かす
+function engineMain(port) {
+  const LIBS = [
+    'https://cdn.jsdelivr.net/npm/kokoro-js@1/dist/kokoro.web.js',
+    'https://cdn.jsdelivr.net/npm/kokoro-js@1/+esm'
+  ];
+  const MODEL = 'onnx-community/Kokoro-82M-v1.0-ONNX';
+  let ttsPromise = null;
+
+  async function importLib() {
+    let lastErr = null;
+    for (const url of LIBS) {
+      try {
+        const mod = await import(url);
+        if (mod && mod.KokoroTTS) return mod.KokoroTTS;
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    throw lastErr || new Error('音声エンジンを読み込めませんでした');
+  }
+
+  async function load(device) {
+    const KokoroTTS = await importLib();
+    const files = {};
+    const progress_callback = (p) => {
+      if (p && p.status === 'progress' && p.file) {
+        files[p.file] = { loaded: p.loaded || 0, total: p.total || 0 };
+        let loaded = 0;
+        let total = 0;
+        for (const k in files) {
+          loaded += files[k].loaded;
+          total += files[k].total;
+        }
+        port.postMessage({ type: 'progress', loaded, total });
+      }
+    };
+    let tts = null;
+    if (device === 'webgpu') {
+      try {
+        tts = await KokoroTTS.from_pretrained(MODEL, { dtype: 'fp32', device: 'webgpu', progress_callback });
+      } catch (e) {
+        tts = null;
+      }
+    }
+    if (!tts) {
+      tts = await KokoroTTS.from_pretrained(MODEL, { dtype: 'q8', device: 'wasm', progress_callback });
+    }
+    port.postMessage({ type: 'ready' });
+    return tts;
+  }
+
+  function getTTS(device) {
+    if (!ttsPromise) {
+      ttsPromise = load(device).catch((e) => {
+        ttsPromise = null;
+        throw e;
+      });
+    }
+    return ttsPromise;
+  }
+
+  port.onmessage = async (e) => {
+    const m = e.data;
+    if (m.type !== 'gen') return;
+    try {
+      const tts = await getTTS(m.device);
+      const parts = [];
+      let sr = 24000;
+      for (const chunk of m.chunks) {
+        const out = await tts.generate(chunk, { voice: m.voice, speed: 1 });
+        parts.push(out.audio);
+        sr = out.sampling_rate || sr;
+      }
+      const gap = Math.round(sr * 0.15);
+      const length = parts.reduce((n, p) => n + p.length, 0) + gap * (parts.length - 1);
+      const pcm = new Float32Array(length);
+      let offset = 0;
+      parts.forEach((p, i) => {
+        pcm.set(p, offset);
+        offset += p.length + (i < parts.length - 1 ? gap : 0);
+      });
+      port.postMessage({ type: 'done', id: m.id, pcm, sr }, [pcm.buffer]);
+    } catch (err) {
+      port.postMessage({ type: 'error', id: m.id, message: String((err && err.message) || err) });
+    }
+  };
+}
+
 (() => {
   'use strict';
 
   const ITEMS_KEY = 'listeningMaker.items.v1';
   const PREFS_KEY = 'listeningMaker.prefs.v1';
   const $ = (id) => document.getElementById(id);
-  const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
   const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+
+  const SAMPLE_TEXT = 'Hi there. This is how I sound when I read your English.';
+  const LEAD = 0.05;
+  const TAIL = 0.12;
+  const UA = navigator.userAgent;
+  const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(UA) || (/Macintosh/.test(UA) && navigator.maxTouchPoints > 1);
+  const DEVICE = !IS_MOBILE && 'gpu' in navigator ? 'webgpu' : 'wasm';
+  const CAN_GENERATE = 'indexedDB' in window && typeof WebAssembly === 'object';
 
   const STROKE = 'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
   const ICON = {
@@ -1071,6 +1233,7 @@
     next: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="16.6" y="5" width="2.4" height="14" rx="1"/><path d="M5 6.2v11.6a.9.9 0 0 0 1.38.76l8.32-5.26a1.5 1.5 0 0 0 0-2.6L6.38 5.44A.9.9 0 0 0 5 6.2z"/></svg>',
     close: `<svg viewBox="0 0 24 24" ${STROKE} stroke-width="2"><path d="M7 7l10 10M17 7L7 17"/></svg>`,
     mic: `<svg viewBox="0 0 24 24" ${STROKE}><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>`,
+    speaker: `<svg viewBox="0 0 24 24" ${STROKE}><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>`,
     edit: `<svg viewBox="0 0 24 24" ${STROKE}><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>`,
     trash: `<svg viewBox="0 0 24 24" ${STROKE}><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>`,
     sun: `<svg viewBox="0 0 24 24" ${STROKE}><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>`,
@@ -1087,59 +1250,47 @@
   const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'];
   const ABBR = /\b(?:Mr|Mrs|Ms|Dr|Prof|Sr|Jr|St|vs|e\.g|i\.e)\.$/i;
 
-  // 効果音・合成風・子どもの声など、ふつうの人の声ではないもの
-  const EXCLUDED = /^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Deranged|Good News|Hysterical|Jester|Organ|Pipe Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Fred|Junior|Kathy|Ralph|Princess|Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley|Ana|Maisie)\b/i;
-
-  // 声の特徴（名前ではなく、性別と声の印象で表示する）
-  const TRAITS = {
-    aria: ['女性', 'はきはき'],
-    jenny: ['女性', 'やわらか'],
-    michelle: ['女性', '明るい'],
-    emma: ['女性', '明瞭'],
-    ava: ['女性', '落ち着いた'],
-    samantha: ['女性', '標準的'],
-    allison: ['女性', 'やわらか'],
-    susan: ['女性', '落ち着いた'],
-    zoe: ['女性', '明るい'],
-    nicky: ['女性', '若々しい'],
-    joelle: ['女性', 'やさしい'],
-    zira: ['女性', '標準的'],
-    sonia: ['女性', '上品'],
-    libby: ['女性', '明るい'],
-    kate: ['女性', '落ち着いた'],
-    serena: ['女性', '上品'],
-    stephanie: ['女性', 'やわらか'],
-    martha: ['女性', '上品'],
-    hazel: ['女性', '標準的'],
-    guy: ['男性', '力強い'],
-    christopher: ['男性', '低め'],
-    eric: ['男性', '淡々'],
-    roger: ['男性', '快活'],
-    steffan: ['男性', '淡々'],
-    andrew: ['男性', '温かい'],
-    brian: ['男性', '気さく'],
-    tom: ['男性', '標準的'],
-    alex: ['男性', '明瞭'],
-    aaron: ['男性', '落ち着いた'],
-    evan: ['男性', '若々しい'],
-    nathan: ['男性', '低め'],
-    david: ['男性', '標準的'],
-    mark: ['男性', '標準的'],
-    ryan: ['男性', '明るい'],
-    thomas: ['男性', '落ち着いた'],
-    daniel: ['男性', '標準的'],
-    arthur: ['男性', '低め'],
-    oliver: ['男性', 'やわらか'],
-    george: ['男性', '標準的'],
-    'google us english': ['女性', '明瞭'],
-    'google uk english female': ['女性', '明瞭'],
-    'google uk english male': ['男性', '明瞭']
+  // 品質の高い、ふつうの大人の話し声だけを選んでいる（ささやき声・キャラクター声は含めない）
+  const VOICES = {
+    US: [
+      { id: 'af_heart', label: '女性 · 温かい' },
+      { id: 'af_bella', label: '女性 · 明るい' },
+      { id: 'af_sarah', label: '女性 · 落ち着いた' },
+      { id: 'af_kore', label: '女性 · はきはき' },
+      { id: 'af_aoede', label: '女性 · やわらか' },
+      { id: 'am_michael', label: '男性 · 落ち着いた' },
+      { id: 'am_fenrir', label: '男性 · 力強い' },
+      { id: 'am_puck', label: '男性 · 快活' }
+    ],
+    UK: [
+      { id: 'bf_emma', label: '女性 · 上品' },
+      { id: 'bf_isabella', label: '女性 · やわらか' },
+      { id: 'bm_george', label: '男性 · 低め' },
+      { id: 'bm_fable', label: '男性 · 語り口調' }
+    ]
   };
+
+  function isVoice(id) {
+    return VOICES.US.some((v) => v.id === id) || VOICES.UK.some((v) => v.id === id);
+  }
+
+  function accentOfVoice(id) {
+    return VOICES.UK.some((v) => v.id === id) ? 'UK' : 'US';
+  }
+
+  function defaultVoice(accent) {
+    return VOICES[accent][0].id;
+  }
+
+  function voiceLabel(id) {
+    const v = VOICES.US.concat(VOICES.UK).find((x) => x.id === id);
+    return v ? v.label : '';
+  }
 
   const DEFAULT_PREFS = {
     theme: 'system',
     accent: 'US',
-    voice: { US: '', UK: '' },
+    kvoice: { US: 'af_heart', UK: 'bf_emma' },
     rate: 1,
     pause: 1,
     repeat: 1,
@@ -1147,7 +1298,7 @@
     display: 'follow'
   };
 
-  // ---------- 保存 ----------
+  // ---------- 保存（英文と設定） ----------
   function loadJSON(key, fallback) {
     try {
       const v = JSON.parse(localStorage.getItem(key));
@@ -1159,10 +1310,14 @@
 
   function loadPrefs() {
     const p = loadJSON(PREFS_KEY, {});
+    const kv = { ...DEFAULT_PREFS.kvoice, ...(p.kvoice || {}) };
+    if (!isVoice(kv.US) || accentOfVoice(kv.US) !== 'US') kv.US = DEFAULT_PREFS.kvoice.US;
+    if (!isVoice(kv.UK) || accentOfVoice(kv.UK) !== 'UK') kv.UK = DEFAULT_PREFS.kvoice.UK;
     return {
       ...DEFAULT_PREFS,
       ...p,
-      voice: { ...DEFAULT_PREFS.voice, ...(p.voice || {}) }
+      accent: p.accent === 'UK' ? 'UK' : 'US',
+      kvoice: kv
     };
   }
 
@@ -1171,7 +1326,7 @@
       localStorage.setItem(PREFS_KEY, JSON.stringify({
         theme: prefs.theme,
         accent: prefs.accent,
-        voice: prefs.voice,
+        kvoice: prefs.kvoice,
         rate: prefs.rate,
         pause: prefs.pause,
         repeat: prefs.repeat,
@@ -1189,17 +1344,24 @@
 
   function normalizeItem(i) {
     const s = i.settings || {};
-    const accent = s.accent === 'US' || s.accent === 'UK'
-      ? s.accent
-      : (/(en-GB|\bUK\b|British|United Kingdom)/i.test(s.voiceName || '') ? 'UK' : 'US');
+    let accent;
+    let voice;
+    if (isVoice(s.voice)) {
+      voice = s.voice;
+      accent = accentOfVoice(voice);
+    } else {
+      accent = s.accent === 'UK' || s.accent === 'US'
+        ? s.accent
+        : (/(en-GB|\bUK\b|British)/i.test(s.voiceName || '') ? 'UK' : 'US');
+      voice = defaultVoice(accent);
+    }
     const created = Number(i.createdAt) || Date.now();
     return {
       id: String(i.id),
       text: String(i.text),
       settings: {
         accent,
-        voiceURI: s.voiceURI || '',
-        voiceName: s.voiceName || '',
+        voice,
         rate: clampNum(s.rate, 0.5, 1.5, 1),
         pause: clampNum(s.pause, 0, 5, 1),
         repeat: [1, 2, 3, 5].includes(Number(s.repeat)) ? Number(s.repeat) : 1,
@@ -1236,13 +1398,65 @@
   let editingId = null;
   let formAccent = prefs.accent;
   let formRepeat = prefs.repeat;
-  let formVoice = { ...prefs.voice };
-  let voicesByAccent = { US: [], UK: [] };
-  let bestTier = { US: 0, UK: 0 };
-  const failedVoices = new Set();
+  let formVoice = { ...prefs.kvoice };
   let lastDeleted = null;
   let accentSeg = null;
   let repeatSeg = null;
+  let clipsLoaded = false;
+
+  // ---------- 保存（音声） ----------
+  const clips = new Map();
+  let dbPromise = null;
+
+  function db() {
+    if (!dbPromise) {
+      dbPromise = new Promise((resolve, reject) => {
+        const r = indexedDB.open('listeningMaker', 1);
+        r.onupgradeneeded = () => r.result.createObjectStore('clips');
+        r.onsuccess = () => resolve(r.result);
+        r.onerror = () => reject(r.error);
+      });
+    }
+    return dbPromise;
+  }
+
+  async function tx(mode, run) {
+    const d = await db();
+    return new Promise((resolve, reject) => {
+      const t = d.transaction('clips', mode);
+      run(t.objectStore('clips'));
+      t.oncomplete = () => resolve();
+      t.onerror = () => reject(t.error);
+      t.onabort = () => reject(t.error);
+    });
+  }
+
+  function putClip(key, value) {
+    return tx('readwrite', (st) => st.put(value, key));
+  }
+
+  function deleteClips(keys) {
+    return tx('readwrite', (st) => keys.forEach((k) => st.delete(k)));
+  }
+
+  function loadAllClips() {
+    return tx('readonly', (st) => {
+      const req = st.openCursor();
+      req.onsuccess = () => {
+        const c = req.result;
+        if (!c) return;
+        const v = c.value;
+        if (v && v.blob) clips.set(c.key, { url: URL.createObjectURL(v.blob), dur: Number(v.dur) || 0 });
+        c.continue();
+      };
+    });
+  }
+
+  function requestPersist() {
+    if (navigator.storage && navigator.storage.persist) {
+      navigator.storage.persist().catch(() => {});
+    }
+  }
 
   // ---------- ユーティリティ ----------
   function escapeHtml(str) {
@@ -1350,6 +1564,335 @@
     toastTimer = setTimeout(() => t.classList.remove('show'), duration || 2400);
   }
 
+  function showNotice(msg) {
+    const n = $('notice');
+    n.textContent = msg;
+    n.classList.remove('hidden');
+  }
+
+  // ---------- 音声データの加工 ----------
+  function trimSilence(pcm, sr) {
+    const th = 0.008;
+    let a = 0;
+    let b = pcm.length - 1;
+    while (a < pcm.length && Math.abs(pcm[a]) < th) a++;
+    while (b > a && Math.abs(pcm[b]) < th) b--;
+    if (a >= b) return pcm;
+    const start = Math.max(0, a - Math.round(sr * LEAD));
+    const end = Math.min(pcm.length, b + Math.round(sr * TAIL) + 1);
+    return pcm.slice(start, end);
+  }
+
+  function normalizePeak(pcm) {
+    let peak = 0;
+    for (let i = 0; i < pcm.length; i++) {
+      const v = Math.abs(pcm[i]);
+      if (v > peak) peak = v;
+    }
+    if (peak > 0) {
+      const gain = Math.min(3, 0.89 / peak);
+      for (let i = 0; i < pcm.length; i++) pcm[i] *= gain;
+    }
+    return pcm;
+  }
+
+  function encodeWav(samples, sr) {
+    const buf = new ArrayBuffer(44 + samples.length * 2);
+    const v = new DataView(buf);
+    const w = (o, s) => {
+      for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i));
+    };
+    w(0, 'RIFF');
+    v.setUint32(4, 36 + samples.length * 2, true);
+    w(8, 'WAVE');
+    w(12, 'fmt ');
+    v.setUint32(16, 16, true);
+    v.setUint16(20, 1, true);
+    v.setUint16(22, 1, true);
+    v.setUint32(24, sr, true);
+    v.setUint32(28, sr * 2, true);
+    v.setUint16(32, 2, true);
+    v.setUint16(34, 16, true);
+    w(36, 'data');
+    v.setUint32(40, samples.length * 2, true);
+    let o = 44;
+    for (let i = 0; i < samples.length; i++, o += 2) {
+      const s = Math.max(-1, Math.min(1, samples[i]));
+      v.setInt16(o, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+    }
+    return new Blob([buf], { type: 'audio/wav' });
+  }
+
+  let silentUrl = null;
+  function silentURL() {
+    if (!silentUrl) silentUrl = URL.createObjectURL(encodeWav(new Float32Array(1200), 24000));
+    return silentUrl;
+  }
+
+  function chunkText(text) {
+    if (text.length <= 280) return [text];
+    const parts = text.split(/(?<=[,;:])\s+/);
+    const out = [];
+    let cur = '';
+    parts.forEach((p) => {
+      if (cur && (cur + ' ' + p).length > 280) {
+        out.push(cur);
+        cur = p;
+      } else {
+        cur = cur ? cur + ' ' + p : p;
+      }
+    });
+    if (cur) out.push(cur);
+    return out;
+  }
+
+  // ---------- 音声エンジンとの接続 ----------
+  const gen = {
+    queue: [],
+    current: null,
+    busy: false,
+    engine: 'idle',
+    load: null,
+    failed: new Set(),
+    waiters: new Map()
+  };
+
+  const engine = (() => {
+    let port = null;
+    let gotReply = false;
+    let seq = 0;
+    const backlog = [];
+    const pending = new Map();
+
+    function handle(e) {
+      gotReply = true;
+      const m = e.data;
+      if (m.type === 'progress') {
+        if (gen.engine !== 'ready') gen.engine = 'loading';
+        gen.load = { loaded: m.loaded, total: m.total };
+        renderEngine();
+        return;
+      }
+      if (m.type === 'ready') {
+        gen.engine = 'ready';
+        renderEngine();
+        return;
+      }
+      const p = pending.get(m.id);
+      if (!p) return;
+      pending.delete(m.id);
+      if (m.type === 'done') {
+        gen.engine = 'ready';
+        p.resolve(m);
+      } else {
+        p.reject(new Error(m.message));
+      }
+    }
+
+    function useMainThread() {
+      const inner = { onmessage: null, postMessage: (d) => setTimeout(() => handle({ data: d }), 0) };
+      engineMain(inner);
+      port = { postMessage: (d) => inner.onmessage({ data: d }) };
+      backlog.splice(0).forEach((msg) => port.postMessage(msg));
+    }
+
+    function start() {
+      if (port) return;
+      try {
+        const src = `(${engineMain.toString()})(self);`;
+        const url = URL.createObjectURL(new Blob([src], { type: 'text/javascript' }));
+        const worker = new Worker(url, { type: 'module' });
+        worker.onmessage = handle;
+        worker.onerror = (ev) => {
+          if (ev && ev.preventDefault) ev.preventDefault();
+          if (!gotReply) {
+            worker.terminate();
+            useMainThread();
+          }
+        };
+        port = worker;
+      } catch (e) {
+        useMainThread();
+      }
+    }
+
+    function request(msg) {
+      start();
+      const id = ++seq;
+      const full = { ...msg, id };
+      return new Promise((resolve, reject) => {
+        pending.set(id, { resolve, reject });
+        if (!gotReply) backlog.push(full);
+        port.postMessage(full);
+      });
+    }
+
+    return { request };
+  })();
+
+  function clipKey(voice, sentence) {
+    return `${voice}|${sentence}`;
+  }
+
+  function isSampleKey(key) {
+    return key.endsWith('|' + SAMPLE_TEXT);
+  }
+
+  function neededKeys(item) {
+    return splitSentences(item.text).map((s) => clipKey(item.settings.voice, s));
+  }
+
+  function isNeeded(key) {
+    if (isSampleKey(key)) return true;
+    return items.some((i) => neededKeys(i).includes(key));
+  }
+
+  function itemStatus(item) {
+    const keys = neededKeys(item);
+    const have = keys.filter((k) => clips.has(k)).length;
+    if (have === keys.length) return { ready: true, have, total: keys.length };
+    const pendingKeys = keys.some((k) => k === gen.current || gen.queue.includes(k));
+    const failed = !pendingKeys && keys.some((k) => gen.failed.has(k));
+    return { ready: false, failed, active: keys.includes(gen.current), have, total: keys.length };
+  }
+
+  function enqueueKeys(keys, front) {
+    if (!CAN_GENERATE) return;
+    const missing = [...new Set(keys)].filter((k) => !clips.has(k) && k !== gen.current);
+    if (!missing.length) return;
+    missing.forEach((k) => gen.failed.delete(k));
+    const rest = gen.queue.filter((k) => !missing.includes(k));
+    gen.queue = front ? missing.concat(rest) : rest.concat(missing);
+    if (gen.engine === 'idle' || gen.engine === 'error') gen.engine = 'loading';
+    renderEngine();
+    pump();
+  }
+
+  function enqueueItem(item, front) {
+    enqueueKeys(neededKeys(item), front);
+  }
+
+  function settleWaiters(key, err) {
+    const list = gen.waiters.get(key);
+    if (!list) return;
+    gen.waiters.delete(key);
+    list.forEach((w) => (err ? w.reject(err) : w.resolve()));
+  }
+
+  function waitClip(key) {
+    if (clips.has(key)) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const list = gen.waiters.get(key) || [];
+      list.push({ resolve, reject });
+      gen.waiters.set(key, list);
+      enqueueKeys([key], true);
+    });
+  }
+
+  async function pump() {
+    if (gen.busy) return;
+    let key;
+    while ((key = gen.queue.shift()) !== undefined) {
+      if (!clips.has(key) && isNeeded(key)) break;
+    }
+    if (key === undefined) {
+      gen.current = null;
+      renderEngine();
+      return;
+    }
+
+    gen.busy = true;
+    gen.current = key;
+    renderEngine();
+    renderList();
+
+    try {
+      const sep = key.indexOf('|');
+      const res = await engine.request({
+        type: 'gen',
+        voice: key.slice(0, sep),
+        chunks: chunkText(key.slice(sep + 1)),
+        device: DEVICE
+      });
+      const pcm = normalizePeak(trimSilence(res.pcm, res.sr));
+      const blob = encodeWav(pcm, res.sr);
+      const dur = pcm.length / res.sr;
+      try {
+        await putClip(key, { blob, dur });
+      } catch (e) {
+        toast('音声を端末に保存できませんでした。保存容量を確認してください', null, 3600);
+      }
+      clips.set(key, { url: URL.createObjectURL(blob), dur });
+      settleWaiters(key, null);
+    } catch (err) {
+      gen.failed.add(key);
+      settleWaiters(key, err);
+      if (gen.engine !== 'ready') {
+        gen.engine = 'error';
+        gen.queue.splice(0).forEach((k) => {
+          gen.failed.add(k);
+          settleWaiters(k, err);
+        });
+      }
+    }
+
+    gen.busy = false;
+    gen.current = null;
+    renderEngine();
+    renderList();
+    pump();
+  }
+
+  async function gc() {
+    if (!clipsLoaded) return;
+    const keep = new Set();
+    const refs = lastDeleted ? items.concat([lastDeleted.item]) : items;
+    refs.forEach((i) => neededKeys(i).forEach((k) => keep.add(k)));
+    const drop = [...clips.keys()].filter((k) => !keep.has(k) && !isSampleKey(k));
+    drop.forEach((k) => {
+      URL.revokeObjectURL(clips.get(k).url);
+      clips.delete(k);
+    });
+    if (drop.length) {
+      try {
+        await deleteClips(drop);
+      } catch (e) {}
+    }
+  }
+
+  function mb(n) {
+    return Math.round(n / 1e6);
+  }
+
+  function renderEngine() {
+    const el = $('engine');
+    const bar = $('engineBar');
+    let text = '';
+    let pct = null;
+    const remaining = gen.queue.filter((k) => !isSampleKey(k)).length
+      + (gen.current && !isSampleKey(gen.current) ? 1 : 0);
+
+    if (gen.engine === 'loading' && (gen.busy || gen.queue.length)) {
+      const l = gen.load;
+      if (l && l.total && l.loaded < l.total) {
+        text = `音声エンジンを準備中（初回のみ） ${mb(l.loaded)} / ${mb(l.total)} MB`;
+        pct = l.loaded / l.total;
+      } else {
+        text = '音声エンジンを準備中';
+      }
+    } else if (remaining > 0) {
+      text = `音声を作成中 · 残り${remaining}文`;
+    } else if (gen.engine === 'error') {
+      text = '音声エンジンを読み込めませんでした。ネットワークに接続して、作成できなかった英文の再試行ボタンを押してください';
+    }
+
+    el.classList.toggle('hidden', !text);
+    el.classList.toggle('error', gen.engine === 'error' && !remaining);
+    el.classList.toggle('no-bar', pct === null);
+    $('engineText').textContent = text;
+    bar.style.setProperty('--p', pct === null ? 0 : pct.toFixed(3));
+  }
+
   // ---------- テーマ ----------
   function applyTheme() {
     const root = document.documentElement;
@@ -1387,202 +1930,20 @@
     return { set: (v) => set(v, false) };
   }
 
-  // ---------- 声の選別 ----------
-  function accentOf(v) {
-    const l = (v.lang || '').replace('_', '-').toLowerCase();
-    if (l.startsWith('en-us')) return 'US';
-    if (l.startsWith('en-gb')) return 'UK';
-    return null;
-  }
-
-  function baseName(v) {
-    return v.name
-      .replace(/^Microsoft\s+/i, '')
-      .replace(/\s+Online\b.*$/i, '')
-      .replace(/\s*-\s*English.*$/i, '')
-      .replace(/\s*\((Enhanced|Premium|Natural)\)/gi, '')
-      .replace(/\s*\(English.*\)\s*$/i, '')
-      .replace(/\s+Desktop$/i, '')
-      .replace(/Multilingual$/i, '')
-      .trim();
-  }
-
-  // 0: 除外 / 1: 旧式（他に無いときだけ表示）/ 2: 標準 / 3: 高音質
-  function voiceTier(v) {
-    const base = baseName(v);
-    const id = `${v.name} ${v.voiceURI || ''}`;
-    if (EXCLUDED.test(base) || /eloquence/i.test(id)) return 0;
-    if (/natural|neural|premium|enhanced|siri/i.test(id)) return 3;
-    if (/^Microsoft/i.test(v.name)) return /online/i.test(v.name) ? 3 : 1;
-    return 2;
-  }
-
-  function qualityScore(v) {
-    const id = `${v.name} ${v.voiceURI || ''}`;
-    if (/premium|natural|neural/i.test(id)) return 3;
-    if (/enhanced|siri/i.test(id)) return 2;
-    if (/^Google/i.test(v.name)) return 1;
-    return 0;
-  }
-
-  function traitOf(base) {
-    const t = TRAITS[base.toLowerCase()];
-    if (t) return { gender: t[0], label: `${t[0]} · ${t[1]}` };
-    if (/female/i.test(base)) return { gender: '女性', label: '女性' };
-    if (/male/i.test(base)) return { gender: '男性', label: '男性' };
-    return { gender: '', label: '標準の声' };
-  }
-
-  function genderOrder(g) {
-    return g === '女性' ? 0 : g === '男性' ? 1 : 2;
-  }
-
-  function loadVoices() {
-    if (!synth) return;
-    const groups = { US: [], UK: [] };
-    synth.getVoices().forEach((v) => {
-      const accent = accentOf(v);
-      if (!accent || failedVoices.has(v.voiceURI)) return;
-      const tier = voiceTier(v);
-      if (!tier) return;
-      groups[accent].push({ v, tier, score: qualityScore(v), base: baseName(v) });
-    });
-
-    const next = { US: [], UK: [] };
-    const tiers = { US: 0, UK: 0 };
-
-    Object.keys(groups).forEach((k) => {
-      const all = groups[k];
-      const good = all.filter((e) => e.tier >= 2);
-      // 端末内の声はすぐに話し始めるため、品質が足りていれば端末内の声だけを使う
-      const localGood = good.filter((e) => e.v.localService);
-      const pool = localGood.length ? localGood : (good.length ? good : all);
-
-      const byBase = new Map();
-      pool.forEach((e) => {
-        const key = e.base.toLowerCase();
-        const cur = byBase.get(key);
-        if (!cur || e.tier * 10 + e.score > cur.tier * 10 + cur.score) byBase.set(key, e);
-      });
-
-      const list = [...byBase.values()].map((e) => ({ ...e, ...traitOf(e.base) }));
-      list.sort((a, b) =>
-        b.tier - a.tier
-        || genderOrder(a.gender) - genderOrder(b.gender)
-        || b.score - a.score
-        || a.label.localeCompare(b.label, 'ja'));
-
-      const count = {};
-      list.forEach((e) => { count[e.label] = (count[e.label] || 0) + 1; });
-      const seq = {};
-      list.forEach((e) => {
-        const l = e.label;
-        if (count[l] > 1) {
-          seq[l] = (seq[l] || 0) + 1;
-          e.label = `${l} ${seq[l]}`;
-        }
-      });
-
-      next[k] = list;
-      tiers[k] = list.length ? Math.max(...list.map((e) => e.tier)) : 0;
-    });
-
-    voicesByAccent = next;
-    bestTier = tiers;
-    renderVoiceSelect();
-    if (player.state !== 'idle') updatePlayerTitle();
-  }
-
-  function voicesReady() {
-    return voicesByAccent.US.length > 0 || voicesByAccent.UK.length > 0;
-  }
-
-  function waitVoices() {
-    if (!synth || voicesReady()) return Promise.resolve();
-    if (synth.getVoices().length) {
-      loadVoices();
-      return Promise.resolve();
-    }
-    return new Promise((resolve) => {
-      let finished = false;
-      const done = () => {
-        if (finished) return;
-        finished = true;
-        clearTimeout(timer);
-        synth.removeEventListener('voiceschanged', done);
-        loadVoices();
-        resolve();
-      };
-      const timer = setTimeout(done, 800);
-      synth.addEventListener('voiceschanged', done);
-    });
-  }
-
-  function qualityHint() {
-    const ua = navigator.userAgent;
-    if (/iPhone|iPad|iPod/.test(ua)) {
-      return '高音質の声は「設定 → アクセシビリティ → 読み上げコンテンツ → 声 → 英語」で追加できます。追加後にページを再読み込みしてください。';
-    }
-    if (/Macintosh/.test(ua)) {
-      return '高音質の声は「システム設定 → アクセシビリティ → 読み上げコンテンツ → システムの声 → 声を管理」で追加できます。';
-    }
-    if (/Windows/.test(ua)) {
-      return 'Microsoft Edge で開くと、高音質の声を使えます。';
-    }
-    return 'Chrome または Edge で開くと、高音質の声を使えます。';
-  }
-
+  // ---------- フォーム ----------
   function renderVoiceSelect() {
     const sel = $('voice');
-    const list = voicesByAccent[formAccent];
-    const want = formVoice[formAccent];
+    const list = VOICES[formAccent];
     sel.innerHTML = '';
-    if (!list.length) {
-      sel.add(new Option('標準の声', ''));
-      sel.disabled = true;
-    } else {
-      sel.disabled = false;
-      list.forEach((e) => sel.add(new Option(e.label, e.v.voiceURI)));
-      sel.value = list.some((e) => e.v.voiceURI === want) ? want : list[0].v.voiceURI;
-    }
-    const hint = $('voiceHint');
-    const low = synth && synth.getVoices().length && bestTier[formAccent] < 2;
-    hint.textContent = low ? qualityHint() : '';
-    hint.classList.toggle('hidden', !low);
+    list.forEach((v) => sel.add(new Option(v.label, v.id)));
+    const want = formVoice[formAccent];
+    sel.value = list.some((v) => v.id === want) ? want : list[0].id;
   }
 
-  function findVoice(settings) {
-    const list = voicesByAccent[settings.accent] || [];
-    return list.find((e) => e.v.voiceURI === settings.voiceURI)
-      || list.find((e) => e.v.name === settings.voiceName)
-      || list[0]
-      || null;
-  }
-
-  function langOf(accent) {
-    return accent === 'UK' ? 'en-GB' : 'en-US';
-  }
-
-  // 声の読み込みを先に済ませておき、再生ボタンを押した瞬間に話し始められるようにする
-  function warmUp(entry) {
-    if (!synth || synth.speaking || synth.pending) return;
-    const u = new SpeechSynthesisUtterance(' ');
-    u.volume = 0;
-    if (entry) {
-      u.voice = entry.v;
-      u.lang = (entry.v.lang || '').replace('_', '-');
-    }
-    synth.speak(u);
-  }
-
-  // ---------- フォーム ----------
   function getFormSettings() {
-    const sel = $('voice');
-    const e = voicesByAccent[formAccent].find((x) => x.v.voiceURI === sel.value);
     return {
       accent: formAccent,
-      voiceURI: e ? e.v.voiceURI : '',
-      voiceName: e ? e.v.name : '',
+      voice: $('voice').value || defaultVoice(formAccent),
       rate: Number($('rate').value),
       pause: Number($('pause').value),
       repeat: Number(formRepeat),
@@ -1624,7 +1985,6 @@
       $('countline').textContent = empty ? '' : `${splitSentences(text).length}文 · ${countWords(text)}語`;
     }
     $('btnSave').disabled = empty;
-    $('btnPreview').disabled = empty || !synth;
   }
 
   function onFormChange() {
@@ -1636,7 +1996,7 @@
     prefs.pause = s.pause;
     prefs.repeat = s.repeat;
     prefs.loop = s.loop;
-    prefs.voice = { ...prefs.voice, ...formVoice };
+    prefs.kvoice = { ...prefs.kvoice, ...formVoice };
     savePrefs();
   }
 
@@ -1655,7 +2015,7 @@
     $('text').value = '';
     $('btnSave').textContent = '保存';
     $('btnCancelEdit').classList.add('hidden');
-    formVoice = { ...prefs.voice };
+    formVoice = { ...prefs.kvoice };
     applyFormSettings(settingsFromPrefs());
     renderList();
   }
@@ -1664,7 +2024,7 @@
     stopDictation();
     editingId = item.id;
     $('text').value = item.text;
-    formVoice = { ...prefs.voice, [item.settings.accent]: item.settings.voiceURI };
+    formVoice = { ...prefs.kvoice, [item.settings.accent]: item.settings.voice };
     applyFormSettings(item.settings);
     $('btnSave').textContent = '更新';
     $('btnCancelEdit').classList.remove('hidden');
@@ -1678,16 +2038,68 @@
     stopDictation();
     const settings = getFormSettings();
     const now = Date.now();
+    let item = null;
+    let msg = '保存しました';
 
     if (editingId) {
-      const it = items.find((i) => i.id === editingId);
-      if (it) Object.assign(it, { text, settings, updatedAt: now });
-      if (saveItems()) toast('更新しました');
+      item = items.find((i) => i.id === editingId);
+      if (item) {
+        if (player.itemId === item.id) stopPlayback();
+        Object.assign(item, { text, settings, updatedAt: now });
+      }
+      msg = '更新しました';
     } else {
-      items.push(normalizeItem({ id: uid(), text, settings, createdAt: now, updatedAt: now }));
-      if (saveItems()) toast('保存しました');
+      item = normalizeItem({ id: uid(), text, settings, createdAt: now, updatedAt: now });
+      items.push(item);
     }
+    if (!saveItems() || !item) return;
+
+    requestPersist();
+    const st = itemStatus(item);
+    toast(st.ready ? msg : `${msg} · 音声を作成しています`);
+    enqueueItem(item, true);
     resetForm();
+    gc();
+  }
+
+  // ---------- 試聴 ----------
+  const sampleAudio = new Audio();
+  sampleAudio.preload = 'auto';
+
+  function setSampleBusy(on) {
+    const b = $('btnSample');
+    b.classList.toggle('busy', on);
+    b.setAttribute('aria-busy', String(on));
+  }
+
+  async function playSample() {
+    if (!CAN_GENERATE) return;
+    const voice = $('voice').value;
+    const key = clipKey(voice, SAMPLE_TEXT);
+    if (player.state === 'playing') togglePlay();
+    sampleAudio.pause();
+
+    if (clips.has(key)) {
+      sampleAudio.src = clips.get(key).url;
+      sampleAudio.play().catch(() => {});
+      return;
+    }
+
+    // iPhone では、タップ中に一度再生しておかないと後から音を出せないため、無音で準備する
+    sampleAudio.src = silentURL();
+    sampleAudio.play().catch(() => {});
+    setSampleBusy(true);
+    try {
+      await waitClip(key);
+      if ($('voice').value === voice && clips.has(key)) {
+        sampleAudio.src = clips.get(key).url;
+        sampleAudio.play().catch(() => {});
+      }
+    } catch (e) {
+      toast('試聴用の音声を作成できませんでした');
+    } finally {
+      setSampleBusy(false);
+    }
   }
 
   // ---------- 音声入力 ----------
@@ -1749,7 +2161,7 @@
     dictation.final = '';
 
     const rec = new Recognition();
-    rec.lang = langOf(formAccent);
+    rec.lang = formAccent === 'UK' ? 'en-GB' : 'en-US';
     rec.continuous = true;
     rec.interimResults = true;
     rec.maxAlternatives = 1;
@@ -1800,8 +2212,18 @@
   }
 
   // ---------- ライブラリ ----------
-  function itemMeta(i) {
+  function itemMeta(i, st) {
     const parts = [`${timeLabel(i.createdAt)} 保存`];
+    if (!st.ready) {
+      if (st.failed) {
+        parts.push('<span class="st-fail">音声を作成できませんでした</span>');
+      } else if (st.active || st.have > 0) {
+        parts.push(`<span class="st-gen">音声を作成中 ${st.have}/${st.total}文</span>`);
+      } else {
+        parts.push('<span class="st-gen">作成待ち</span>');
+      }
+      return parts.join(' · ');
+    }
     parts.push(i.playCount ? `${i.playCount}回再生` : '未再生');
     if (i.lastPlayedAt) parts.push(`最終 ${relLabel(i.lastPlayedAt)}`);
     if (i.playLog.length >= 2) {
@@ -1813,15 +2235,33 @@
   }
 
   function itemHtml(i) {
+    const st = itemStatus(i);
     const isCurrent = player.itemId === i.id && player.state !== 'idle';
     const isPlaying = isCurrent && player.state === 'playing';
     const sents = splitSentences(i.text);
     const head = sents[0] || i.text;
     const rest = sents.slice(1).join(' ');
+
+    let cls = 'item-play';
+    let icon = isPlaying ? ICON.pause : ICON.play;
+    let label = isPlaying ? '一時停止' : '再生';
+    let style = '';
+    if (!st.ready) {
+      if (st.failed) {
+        cls += ' failed';
+        icon = ICON.replay;
+        label = '音声を作り直す';
+      } else {
+        cls += ' gen';
+        style = ` style="--pg:${(st.have / Math.max(1, st.total)).toFixed(3)}"`;
+        label = '音声を作成中';
+      }
+    }
+
     return `
       <div class="item ${isCurrent ? 'playing' : ''} ${editingId === i.id ? 'editing' : ''}">
-        <button class="item-play" type="button" data-action="play" data-id="${i.id}" aria-label="${isPlaying ? '一時停止' : '再生'}">
-          ${isPlaying ? ICON.pause : ICON.play}
+        <button class="${cls}"${style} type="button" data-action="play" data-id="${i.id}" aria-label="${label}">
+          ${icon}
         </button>
         <div class="item-body">
           <div class="item-head">
@@ -1829,7 +2269,7 @@
             <span class="tag">${i.settings.accent}</span>
           </div>
           ${rest ? `<div class="item-snippet" lang="en">${escapeHtml(rest)}</div>` : ''}
-          <div class="item-meta">${itemMeta(i)}</div>
+          <div class="item-meta">${itemMeta(i, st)}</div>
         </div>
         <div class="item-actions">
           <button class="icon-btn" type="button" data-action="edit" data-id="${i.id}" aria-label="編集">${ICON.edit}</button>
@@ -1839,6 +2279,7 @@
   }
 
   function renderList() {
+    if (!clipsLoaded) return;
     const search = $('search');
     const showSearch = items.length >= 6;
     search.classList.toggle('hidden', !showSearch);
@@ -1882,11 +2323,22 @@
     const item = items.find((i) => i.id === btn.dataset.id);
     if (!item) return;
     const action = btn.dataset.action;
-    if (action === 'play') playItem(item);
+    if (action === 'play') {
+      const st = itemStatus(item);
+      if (st.ready) {
+        playItem(item);
+      } else if (st.failed) {
+        enqueueItem(item, true);
+        renderList();
+      } else {
+        toast(`音声を作成中です（${st.have}/${st.total}文）`);
+      }
+    }
     if (action === 'edit') startEdit(item);
     if (action === 'delete') deleteItem(item.id);
   }
 
+  let gcTimer = null;
   function deleteItem(id) {
     const idx = items.findIndex((i) => i.id === id);
     if (idx < 0) return;
@@ -1895,50 +2347,58 @@
     if (editingId === id) resetForm();
     saveItems();
     renderList();
+    renderEngine();
     lastDeleted = { item: removed, index: idx };
+    clearTimeout(gcTimer);
+    gcTimer = setTimeout(() => {
+      lastDeleted = null;
+      gc();
+    }, 6500);
     toast(`「${truncate(firstSentence(removed.text), 16)}」を削除しました`, {
       label: '取り消す',
       onClick: () => {
         if (!lastDeleted) return;
-        items.splice(Math.min(lastDeleted.index, items.length), 0, lastDeleted.item);
+        const restored = lastDeleted.item;
+        items.splice(Math.min(lastDeleted.index, items.length), 0, restored);
         lastDeleted = null;
+        clearTimeout(gcTimer);
         saveItems();
+        enqueueItem(restored);
         renderList();
         toast('元に戻しました');
       }
     }, 6000);
   }
 
-  // ---------- 再生エンジン ----------
+  // ---------- 再生 ----------
+  const audio = new Audio();
+  audio.preload = 'auto';
+
+  function keepPitch(el) {
+    el.preservesPitch = true;
+    el.mozPreservesPitch = true;
+    el.webkitPreservesPitch = true;
+  }
+
   const player = {
     sentences: [],
+    keys: [],
     plan: [],
     step: 0,
     settings: null,
     itemId: null,
     state: 'idle',
-    token: 0,
     timer: null,
-    estimator: null,
-    pendTimer: null,
-    gotBoundary: false,
-    needGap: false,
-    live: [],
+    raf: 0,
+    clip: null,
+    gapNext: null,
+    switchAt: 0,
     rendered: -1,
     words: [],
     revealedMax: -1,
     nowIdx: -1,
     logEntry: null
   };
-
-  // speak() から実際に話し始めるまでの時間（ミリ秒）。次の文を、この分だけ早めに準備する
-  const latency = { avg: 0, n: 0 };
-
-  function recordLatency(ms) {
-    const v = Math.min(1500, Math.max(0, ms));
-    latency.avg = latency.n ? latency.avg * 0.6 + v * 0.4 : v;
-    latency.n += 1;
-  }
 
   function buildPlan(n, repeat) {
     const plan = [];
@@ -1958,79 +2418,50 @@
       togglePlay();
       return;
     }
+    sampleAudio.pause();
     const entry = { t: Date.now(), r: item.settings.rate };
     item.playLog.push(entry);
     if (item.playLog.length > 500) item.playLog.splice(0, item.playLog.length - 500);
     item.playCount += 1;
     item.lastPlayedAt = entry.t;
     saveItems();
-    startPlayback({ text: item.text, settings: { ...item.settings }, itemId: item.id });
-    player.logEntry = entry;
-  }
 
-  function startPlayback(opts) {
-    if (!synth) {
-      toast('このブラウザは読み上げに対応していません');
-      return;
-    }
-    const sentences = splitSentences(opts.text);
-    if (!sentences.length) return;
-    stopDictation();
+    const sentences = splitSentences(item.text);
     Object.assign(player, {
       sentences,
-      plan: buildPlan(sentences.length, opts.settings.repeat),
+      keys: sentences.map((s) => clipKey(item.settings.voice, s)),
+      plan: buildPlan(sentences.length, item.settings.repeat),
       step: 0,
-      settings: opts.settings,
-      itemId: opts.itemId,
+      settings: { ...item.settings },
+      itemId: item.id,
       rendered: -1,
-      logEntry: null
+      logEntry: entry
     });
-    updatePlayerTitle();
+    $('pTitle').textContent = `${item.settings.accent} · ${voiceLabel(item.settings.voice)}`;
     renderBar();
     showPlayer(true);
-    playFrom(0);
+    playStep(0);
     renderList();
   }
 
-  function updatePlayerTitle() {
-    if (!player.settings) return;
-    const e = findVoice(player.settings);
-    $('pTitle').textContent = e ? `${player.settings.accent} · ${e.label}` : player.settings.accent;
-  }
-
-  function setPending(on) {
-    clearTimeout(player.pendTimer);
-    if (on) {
-      player.pendTimer = setTimeout(() => $('pPlay').classList.add('pending'), 250);
-    } else {
-      $('pPlay').classList.remove('pending');
+  function safePlay() {
+    const p = audio.play();
+    if (p && p.catch) {
+      p.catch((err) => {
+        if (err && err.name === 'AbortError') return;
+        if (player.state === 'playing') {
+          player.state = 'paused';
+          stopTicker();
+          updatePlayerUI();
+          renderList();
+        }
+      });
     }
   }
 
-  function clearTimers() {
+  function playStep(step) {
     clearTimeout(player.timer);
-    stopEstimator();
-  }
-
-  function interrupt() {
-    player.token += 1;
-    clearTimers();
-    setPending(false);
-    player.live = [];
-    if (synth && (synth.speaking || synth.pending)) {
-      synth.cancel();
-      player.needGap = true;
-    }
-  }
-
-  function playFrom(step) {
-    interrupt();
-    send(step);
-  }
-
-  function send(step) {
-    const token = player.token;
-    clearTimers();
+    player.gapNext = null;
 
     if (step >= player.plan.length) {
       if (player.settings.loop) {
@@ -2042,166 +2473,113 @@
     }
 
     player.step = step;
-    player.state = 'playing';
     const sIdx = player.plan[step].s;
     if (player.rendered !== sIdx) renderSentence(sIdx);
     clearNow();
-    updatePlayerUI();
 
-    waitVoices().then(() => {
-      if (token !== player.token || player.state !== 'playing') return;
-      speakNow(token, makeUtterance(token, step));
-    });
-  }
-
-  function speakNow(token, u) {
-    setPending(true);
-    const go = () => {
-      if (token !== player.token) return;
-      u._queuedAt = performance.now();
-      player.live.push(u);
-      synth.speak(u);
-    };
-    // Chrome は cancel() の直後に speak() すると無視することがあるため、そのときだけ少し待つ
-    if (player.needGap || synth.speaking || synth.pending) {
-      player.needGap = false;
-      synth.cancel();
-      setTimeout(go, 40);
-    } else {
-      go();
-    }
-  }
-
-  // 文と文の間が0秒のときは、次の文を読み上げの待ち行列に先に入れて、途切れずにつなげる
-  function prequeue(token, step, current) {
-    let next = step + 1;
-    if (next >= player.plan.length) {
-      if (!player.settings.loop) return;
-      next = 0;
-    }
-    const nu = makeUtterance(token, next);
-    nu._prequeued = true;
-    current._hasNext = true;
-    player.live.push(nu);
-    synth.speak(nu);
-  }
-
-  function makeUtterance(token, step) {
-    const sIdx = player.plan[step].s;
-    const text = player.sentences[sIdx];
-    const u = new SpeechSynthesisUtterance(text);
-    const entry = findVoice(player.settings);
-    if (entry) {
-      u.voice = entry.v;
-      u.lang = (entry.v.lang || '').replace('_', '-') || langOf(player.settings.accent);
-    } else {
-      u.lang = langOf(player.settings.accent);
-    }
-    u.rate = player.settings.rate;
-
-    u.onstart = () => {
-      if (token !== player.token) return;
-      setPending(false);
-      if (u._queuedAt && !u._prequeued) recordLatency(performance.now() - u._queuedAt);
-      player.step = step;
-      if (player.rendered !== sIdx) renderSentence(sIdx);
-      clearNow();
-      player.gotBoundary = false;
-      updatePlayerUI();
-      startEstimator(token, step, text.length, u.rate);
-      if (player.settings.pause === 0) prequeue(token, step, u);
-    };
-
-    u.onboundary = (e) => {
-      if (token !== player.token || player.step !== step) return;
-      if (e.name && e.name !== 'word') return;
-      player.gotBoundary = true;
-      stopEstimator();
-      reveal(e.charIndex);
-    };
-
-    u.onend = () => {
-      if (token !== player.token || player.state !== 'playing') return;
-      stopEstimator();
-      revealAll();
-      if (u._hasNext) return;
-      const next = step + 1;
-      if (next >= player.plan.length && !player.settings.loop) {
-        finishPlayback();
-        return;
-      }
-      const wait = Math.max(0, player.settings.pause * 1000 - latency.avg);
-      player.timer = setTimeout(() => {
-        if (token === player.token && player.state === 'playing') send(next);
-      }, wait);
-    };
-
-    u.onerror = (e) => {
-      if (token !== player.token) return;
-      if (e.error === 'interrupted' || e.error === 'canceled') return;
-      stopEstimator();
-      setPending(false);
-      const retryable = ['synthesis-failed', 'synthesis-unavailable', 'network', 'voice-unavailable', 'language-unavailable'];
-      if (entry && retryable.includes(e.error)) {
-        failedVoices.add(entry.v.voiceURI);
-        loadVoices();
-        if (findVoice(player.settings)) {
-          toast('選んだ声を使えなかったため、別の声で再生しています', null, 3200);
-          updatePlayerTitle();
-          playFrom(step);
-          return;
-        }
-      }
+    const clip = clips.get(player.keys[sIdx]);
+    if (!clip) {
       player.state = 'paused';
       updatePlayerUI();
       renderList();
-      toast(`読み上げに失敗しました（${e.error}）`);
+      const it = items.find((i) => i.id === player.itemId);
+      if (it) enqueueItem(it, true);
+      toast('この文の音声が見つからないため、作り直しています');
+      return;
+    }
+
+    player.state = 'playing';
+    player.clip = clip;
+    player.switchAt = performance.now();
+    if (audio.src !== clip.url) {
+      audio.src = clip.url;
+    } else {
+      audio.currentTime = 0;
+    }
+    audio.defaultPlaybackRate = player.settings.rate;
+    audio.playbackRate = player.settings.rate;
+    keepPitch(audio);
+    safePlay();
+    startTicker();
+    updatePlayerUI();
+  }
+
+  function onClipEnded() {
+    if (player.state !== 'playing') return;
+    stopTicker();
+    revealAll();
+    const next = player.step + 1;
+    if (next >= player.plan.length && !player.settings.loop) {
+      finishPlayback();
+      return;
+    }
+    const wait = player.settings.pause * 1000;
+    if (wait <= 0) {
+      playStep(next);
+      return;
+    }
+    player.gapNext = next;
+    player.timer = setTimeout(() => {
+      if (player.state === 'playing') playStep(next);
+    }, wait);
+  }
+
+  function startTicker() {
+    stopTicker();
+    const tick = () => {
+      if (player.state !== 'playing' || !player.clip) return;
+      const span = Math.max(0.1, player.clip.dur - LEAD - TAIL);
+      revealAt((audio.currentTime - LEAD) / span);
+      player.raf = requestAnimationFrame(tick);
     };
-
-    return u;
+    player.raf = requestAnimationFrame(tick);
   }
 
-  function startEstimator(token, step, length, rate) {
-    stopEstimator();
-    const charsPerSec = 14 * rate;
-    const t0 = performance.now();
-    player.estimator = setTimeout(function tick() {
-      if (token !== player.token || player.step !== step || player.gotBoundary) return;
-      const ci = Math.floor(((performance.now() - t0) / 1000) * charsPerSec);
-      reveal(Math.min(ci, length));
-      player.estimator = setTimeout(tick, 80);
-    }, 350);
-  }
-
-  function stopEstimator() {
-    clearTimeout(player.estimator);
-    player.estimator = null;
+  function stopTicker() {
+    cancelAnimationFrame(player.raf);
+    player.raf = 0;
   }
 
   function renderSentence(sIdx) {
     const s = player.sentences[sIdx];
     const el = $('pSentence');
+    const tokens = [];
     let html = '';
     let last = 0;
     s.replace(/\S+/g, (m, offset) => {
-      html += escapeHtml(s.slice(last, offset)) + `<span class="w" data-s="${offset}">${escapeHtml(m)}</span>`;
+      html += escapeHtml(s.slice(last, offset)) + `<span class="w">${escapeHtml(m)}</span>`;
+      tokens.push(m);
       last = offset + m.length;
       return m;
     });
     html += escapeHtml(s.slice(last));
     el.innerHTML = html;
     el.scrollTop = 0;
-    player.words = [...el.querySelectorAll('.w')].map((w) => ({ el: w, start: Number(w.dataset.s) }));
+
+    // 単語の長さと句読点の間から、各単語が読まれる位置を見積もる
+    const weights = tokens.map((t) => {
+      let w = t.replace(/[^\p{L}\p{N}']/gu, '').length + 1;
+      if (/[,;:]["'”’)]?$/.test(t)) w += 3;
+      return w;
+    });
+    const total = weights.reduce((a, b) => a + b, 0) || 1;
+    let acc = 0;
+    player.words = [...el.querySelectorAll('.w')].map((w, i) => {
+      const f = acc / total;
+      acc += weights[i];
+      return { el: w, f };
+    });
     player.rendered = sIdx;
     player.revealedMax = -1;
     player.nowIdx = -1;
   }
 
-  function reveal(charIndex) {
+  function revealAt(t) {
+    if (t < 0) return;
     const words = player.words;
     let k = -1;
     for (let i = 0; i < words.length; i++) {
-      if (words[i].start <= charIndex) k = i;
+      if (words[i].f <= t + 0.015) k = i;
       else break;
     }
     if (k < 0) return;
@@ -2228,8 +2606,9 @@
   }
 
   function finishPlayback() {
-    clearTimers();
-    setPending(false);
+    clearTimeout(player.timer);
+    stopTicker();
+    player.gapNext = null;
     player.state = 'done';
     player.step = player.plan.length - 1;
     revealAll();
@@ -2240,13 +2619,24 @@
   function togglePlay() {
     if (player.state === 'playing') {
       player.state = 'paused';
-      interrupt();
+      clearTimeout(player.timer);
+      audio.pause();
+      stopTicker();
       clearNow();
     } else if (player.state === 'paused') {
-      playFrom(player.step);
+      if (player.gapNext !== null) {
+        playStep(player.gapNext);
+      } else if (!player.clip || audio.ended) {
+        playStep(player.step);
+      } else {
+        player.state = 'playing';
+        audio.playbackRate = player.settings.rate;
+        safePlay();
+        startTicker();
+      }
     } else if (player.state === 'done') {
       player.rendered = -1;
-      playFrom(0);
+      playStep(0);
     }
     updatePlayerUI();
     renderList();
@@ -2256,14 +2646,18 @@
     if (!player.sentences.length) return;
     const wasPlaying = player.state === 'playing';
     const s = Math.max(0, Math.min(sIdx, player.sentences.length - 1));
-    playFrom(s * player.settings.repeat);
+    playStep(s * player.settings.repeat);
     if (!wasPlaying) renderList();
   }
 
   function stopPlayback() {
-    interrupt();
+    clearTimeout(player.timer);
+    stopTicker();
+    audio.pause();
     player.state = 'idle';
     player.itemId = null;
+    player.clip = null;
+    player.gapNext = null;
     player.logEntry = null;
     showPlayer(false);
     renderList();
@@ -2288,7 +2682,7 @@
 
   function updatePlayerUI() {
     const n = player.sentences.length;
-    if (!n) return;
+    if (!n || !player.settings) return;
     const idx = curSentence();
     const rep = player.plan[Math.min(player.step, player.plan.length - 1)].r;
     const done = player.state === 'done';
@@ -2326,25 +2720,18 @@
     const cur = player.settings.rate;
     const next = RATES.find((r) => r > cur + 0.001) ?? RATES[0];
     player.settings.rate = next;
+    audio.defaultPlaybackRate = next;
+    audio.playbackRate = next;
+    keepPitch(audio);
 
-    if (player.itemId) {
-      const it = items.find((i) => i.id === player.itemId);
-      if (it) {
-        it.settings.rate = next;
-        if (player.logEntry) player.logEntry.r = next;
-        saveItems();
-        renderList();
-      }
-    } else {
-      $('rate').value = next;
-      onFormChange();
+    const it = items.find((i) => i.id === player.itemId);
+    if (it) {
+      it.settings.rate = next;
+      if (player.logEntry) player.logEntry.r = next;
+      saveItems();
+      renderList();
     }
-
-    if (player.state === 'playing') {
-      jumpTo(curSentence());
-    } else {
-      updatePlayerUI();
-    }
+    updatePlayerUI();
   }
 
   function cycleMode() {
@@ -2357,11 +2744,13 @@
   // ---------- 初期化 ----------
   function init() {
     $('btnMic').innerHTML = ICON.mic;
+    $('btnSample').innerHTML = ICON.speaker;
     $('selectChevron').innerHTML = ICON.chevron;
     $('summaryChevron').innerHTML = ICON.chevron;
     $('pClose').innerHTML = ICON.close;
     $('pPrev').innerHTML = ICON.prev;
     $('pNext').innerHTML = ICON.next;
+    keepPitch(audio);
 
     applyTheme();
     $('btnTheme').addEventListener('click', cycleTheme);
@@ -2371,7 +2760,6 @@
       renderVoiceSelect();
       onFormChange();
       if (dictation.active) setMicUI();
-      if (player.state !== 'playing') warmUp(findVoice(getFormSettings()));
     });
 
     repeatSeg = setupSegmented($('repeatSeg'), formRepeat, (v) => {
@@ -2381,14 +2769,9 @@
 
     applyFormSettings(settingsFromPrefs());
 
-    if (!synth) {
-      $('unsupported').classList.remove('hidden');
-    } else {
-      loadVoices();
-      synth.addEventListener('voiceschanged', loadVoices);
-      document.addEventListener('pointerdown', () => {
-        if (player.state !== 'playing') warmUp(findVoice(getFormSettings()));
-      }, { once: true, capture: true });
+    if (!CAN_GENERATE) {
+      showNotice('このブラウザでは音声を作成できません。Chrome、Edge、Safari の最新版で開いてください。');
+      $('btnSample').disabled = true;
     }
 
     if (Recognition) {
@@ -2402,24 +2785,29 @@
     $('voice').addEventListener('change', (e) => {
       formVoice[formAccent] = e.target.value;
       onFormChange();
-      if (player.state !== 'playing') warmUp(findVoice(getFormSettings()));
     });
+    $('btnSample').addEventListener('click', playSample);
     ['rate', 'pause'].forEach((id) => $(id).addEventListener('input', onFormChange));
     $('loop').addEventListener('change', onFormChange);
     $('text').addEventListener('input', updateLabels);
 
-    $('btnPreview').addEventListener('click', () => {
-      startPlayback({
-        text: $('text').value,
-        settings: getFormSettings(),
-        itemId: null
-      });
-    });
     $('btnSave').addEventListener('click', saveCurrent);
     $('btnCancelEdit').addEventListener('click', resetForm);
 
     $('list').addEventListener('click', onListClick);
     $('search').addEventListener('input', renderList);
+
+    audio.addEventListener('ended', onClipEnded);
+    audio.addEventListener('pause', () => {
+      // コントロールセンターやイヤホンの操作で止められたときに表示を合わせる
+      if (player.state !== 'playing' || audio.ended) return;
+      if (performance.now() - player.switchAt < 400) return;
+      player.state = 'paused';
+      clearTimeout(player.timer);
+      stopTicker();
+      updatePlayerUI();
+      renderList();
+    });
 
     $('pPlay').addEventListener('click', togglePlay);
     $('pPrev').addEventListener('click', () => {
@@ -2465,11 +2853,22 @@
       if (!document.hidden) renderList();
     });
 
-    window.addEventListener('beforeunload', () => {
-      if (synth) synth.cancel();
-    });
+    if (!CAN_GENERATE) {
+      clipsLoaded = true;
+      renderList();
+      return;
+    }
 
-    renderList();
+    loadAllClips()
+      .catch(() => {
+        showNotice('音声を保存する領域を開けませんでした。プライベートブラウズを使っている場合は、通常のウィンドウで開いてください。');
+      })
+      .then(() => {
+        clipsLoaded = true;
+        renderList();
+        gc();
+        items.slice().sort((a, b) => b.createdAt - a.createdAt).forEach((i) => enqueueItem(i));
+      });
   }
 
   init();
